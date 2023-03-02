@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:medi_deliver/Upload.dart';
 
 class DashBoard extends StatelessWidget {
   const DashBoard({super.key});
@@ -8,15 +7,28 @@ class DashBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Container(
         child: Scaffold(
           appBar: AppBar(
-            title: Text("Name"),
+            title: Text("DashBoard"),
+            leading: Icon(Icons.home),
             actions: [
               Icon(
                 Icons.search,
               )
             ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) {
+                    return Upload();
+                  },
+                ),
+              );
+            },
           ),
         ),
       ),
