@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -60,6 +58,10 @@ class MediDeliver extends StatelessWidget {
               ),
               SizedBox(height: 4.0),
               Text("forget password"),
+              SizedBox(height: 4.0),
+              Center(
+                child: Text("Sign In"),
+              )
             ],
           ),
         ),
