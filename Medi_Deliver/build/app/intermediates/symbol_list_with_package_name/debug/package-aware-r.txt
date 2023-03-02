@@ -1,4 +1,4 @@
-com.example.medi_deliver
+com.example.second_project
 attr activityAction
 attr activityName
 attr alpha

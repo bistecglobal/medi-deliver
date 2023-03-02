@@ -10,8 +10,6 @@ class MediDeliver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // username.text="chathura";
-    // String name = username.text;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -56,12 +54,18 @@ class MediDeliver extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 4.0),
-              Text("forget password"),
-              SizedBox(height: 4.0),
+              Text("Forget password"),
+              SizedBox(height: 10.0),
               Center(
-                child: Text("Sign In"),
-              )
+                child: Text(
+                  "Sign In",
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    backgroundColor: Colors.black,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ],
           ),
         ),

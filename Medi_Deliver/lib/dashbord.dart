@@ -8,14 +8,16 @@ class DashBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Name"),
-          actions: [
-            Icon(
-              Icons.search,
-            )
-          ],
+      home: Container(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text("Name"),
+            actions: [
+              Icon(
+                Icons.search,
+              )
+            ],
+          ),
         ),
       ),
     );

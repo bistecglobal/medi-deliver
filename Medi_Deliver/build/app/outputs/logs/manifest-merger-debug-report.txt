@@ -38,7 +38,7 @@ INJECTED from C:\Flutter\Development\medi-deliver\medi_deliver\android\app\src\d
 INJECTED from C:\Flutter\Development\medi-deliver\medi_deliver\android\app\src\debug\AndroidManifest.xml:1:1-8:12
 INJECTED from C:\Flutter\Development\medi-deliver\medi_deliver\android\app\src\debug\AndroidManifest.xml:1:1-8:12
 	package
-		ADDED from C:\Flutter\Development\medi-deliver\medi_deliver\android\app\src\main\AndroidManifest.xml:2:5-39
+		ADDED from C:\Flutter\Development\medi-deliver\medi_deliver\android\app\src\main\AndroidManifest.xml:2:5-41
 		INJECTED from C:\Flutter\Development\medi-deliver\medi_deliver\android\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Flutter\Development\medi-deliver\medi_deliver\android\app\src\debug\AndroidManifest.xml
 	android:versionName
