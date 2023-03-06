@@ -4,7 +4,7 @@
     "type": "PACKAGED_MANIFESTS",
     "kind": "Directory"
   },
-  "applicationId": "com.example.medi_deliver",
+  "applicationId": "com.example.second_project",
   "variantName": "debug",
   "elements": [
     {
