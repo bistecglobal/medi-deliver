@@ -32,7 +32,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
           width: double.infinity,
           height: double.infinity,
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(height: 30.0),
@@ -46,7 +45,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
               SizedBox(height: 10.0),
               Text(
                 "Login in to your account",
-                style: TextStyle(color: Colors.blue, fontSize: 15.0),
+                style: TextStyle(
+                    color: Color.fromARGB(255, 28, 146, 243), fontSize: 15.0),
               ),
               SizedBox(height: 10.0),
               Padding(

@@ -15,13 +15,9 @@ class MediDeliver extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: const MyLoginPage(title: "Medi Deliver"),
       home: const MyLoginPage(
-          title: 'chathura',
-          ),
-      // routes: <String,WvidgetBuilder>{
-      //   '/login':(context) => const Login();
-      // },
+        title: 'chathura',
+      ),
     );
   }
 }
