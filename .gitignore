@@ -21,3 +21,8 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+Medi_Deliver/pubspec.lock
+Medi_Deliver/.flutter-plugins-dependencies
+Medi_Deliver/pubspec.yaml
+medi_deliver/.dart_tool/flutter_build/a8178376c1c835051115a2c4d87125b8/.filecache
+medi_deliver/.dart_tool/flutter_build/a8178376c1c835051115a2c4d87125b8/debug_android_application.stamp

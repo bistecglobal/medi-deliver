@@ -1,3 +1,4 @@
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'dashbord.dart';
 
@@ -11,12 +12,35 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
+  var _userIdController = TextEditingController();
+  var _userPassController = TextEditingController();
+
   void _DashBoard() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (_) {
         return const DashBoard();
       },
     ));
+  }
+
+  void _handleSignInButtonPress() {
+    print("_userIdController");
+
+    var userId = "abc";
+    var password = "abc123";
+
+    if (userId == _userIdController.text &&
+        password == _userPassController.text) {
+      return _DashBoard();
+    }
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controllers when the widget is removed from the widget tree
+    _userIdController.dispose();
+    _userPassController.dispose();
+    super.dispose();
   }
 
   @override
@@ -53,6 +77,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 padding:
                     EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
                 child: TextField(
+                  controller: _userIdController,
                   style: TextStyle(fontSize: 20.0),
                   autofocus: true,
                   decoration: InputDecoration(
@@ -65,6 +90,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 padding:
                     EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 child: TextField(
+                  controller: _userPassController,
                   obscureText: true,
                   style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
@@ -104,7 +130,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                       color: Colors.white,
                     ),
                   ),
-                  onPressed: _DashBoard,
+                  onPressed: _handleSignInButtonPress,
                 ),
               ),
               Container(
