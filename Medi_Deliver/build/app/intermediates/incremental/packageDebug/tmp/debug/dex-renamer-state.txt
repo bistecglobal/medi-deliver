@@ -1,4 +1,0 @@
-#Wed Mar 08 22:44:52 IST 2023
-base.0=C\:\\Flutter\\Development\\medi-deliver\\medi_deliver\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
-renamed.0=classes.dex
-path.0=classes.dex
