@@ -17,6 +17,10 @@ class _UploadState extends State<Upload> {
     Navigator.pushNamed(context, '/booking');
   }
 
+  void _cam() {
+    Navigator.pushNamed(context, '/cam');
+  }
+
   // void _camera() {
   //   Navigator.of(context).push(MaterialPageRoute(
   //     builder: (_) {
@@ -69,6 +73,13 @@ class _UploadState extends State<Upload> {
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         fontSize: 20.0),
+                  ),
+                  IconButton(
+                    onPressed: _cam,
+                    icon: const Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                    ),
                   ),
                   IconButton(
                     onPressed: _booking,

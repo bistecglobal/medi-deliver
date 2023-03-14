@@ -10,12 +10,35 @@ class Questions extends StatefulWidget {
 }
 
 class _QuestionsState extends State<Questions> {
-  final _userNameController = TextEditingController();
-  final _userPhoneController = TextEditingController();
-  final _userEmailController = TextEditingController();
-  final _userAddressController = TextEditingController();
+  final TextEditingController _userNameController =
+      TextEditingController(text: null);
+  final TextEditingController _userPhoneController =
+      TextEditingController(text: null);
+  final TextEditingController _userEmailController =
+      TextEditingController(text: null);
+  final TextEditingController _userAddressController =
+      TextEditingController(text: null);
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _userNameController.addListener(() {
+  //     final String text = _userNameController.text.toLowerCase();
+  //     _userNameController.value = _userNameController.value.copyWith(
+  //       text: text,
+  //       selection:
+  //           TextSelection(baseOffset: text.length, extentOffset: text.length),
+  //       composing: TextRange.empty,
+  //     );
+  //   });
+  // }
 
   void _trakOrder() {
+    print(_userNameController);
+    print(_userPhoneController);
+    print(_userEmailController);
+    print(_userAddressController);
+
     Navigator.of(context).push(MaterialPageRoute(
       builder: (_) {
         return const TrakOrder();
@@ -52,9 +75,9 @@ class _QuestionsState extends State<Questions> {
         Container(
           margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
           color: const Color.fromARGB(255, 232, 243, 249),
-          child: const TextField(
-            // controller: userNameController,
-            decoration: InputDecoration(
+          child: TextFormField(
+            controller: _userNameController,
+            decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               hintText: " Your name",
             ),
@@ -63,9 +86,9 @@ class _QuestionsState extends State<Questions> {
         Container(
           margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
           color: const Color.fromARGB(255, 229, 244, 248),
-          child: const TextField(
-            // controller: _userPhoneController,
-            decoration: InputDecoration(
+          child: TextFormField(
+            controller: _userPhoneController,
+            decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               hintText: " Phone",
             ),
@@ -74,8 +97,9 @@ class _QuestionsState extends State<Questions> {
         Container(
           margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
           color: const Color.fromARGB(255, 213, 236, 241),
-          child: const TextField(
-            decoration: InputDecoration(
+          child: TextFormField(
+            controller: _userEmailController,
+            decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               hintText: " Email",
             ),
@@ -84,8 +108,9 @@ class _QuestionsState extends State<Questions> {
         Container(
           margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
           color: const Color.fromARGB(255, 214, 230, 241),
-          child: const TextField(
-            decoration: InputDecoration(
+          child: TextFormField(
+            controller: _userAddressController,
+            decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               hintText: " Address",
             ),

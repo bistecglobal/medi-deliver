@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_medi/calander.dart';
+import 'package:new_medi/cam.dart';
 
 import 'Upload.dart';
 import 'dashbord.dart';
@@ -39,6 +40,8 @@ class _MyWidgetState extends State<MyWidget> {
             return MaterialPageRoute(builder: (_) => const Booking());
           } else if (settings.name == '/trakOrder') {
             return MaterialPageRoute(builder: (_) => const TrakOrder());
+          } else if (settings.name == '/cam') {
+            return MaterialPageRoute(builder: (_) => const Cam());
           } else {
             return null;
           }
