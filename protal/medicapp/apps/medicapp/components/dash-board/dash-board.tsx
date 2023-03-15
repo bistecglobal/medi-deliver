@@ -15,13 +15,11 @@ import {
 import { Menu } from "antd";
 import { useRouter } from "next/navigation";
 import { Route, Router, Routes } from 'react-router-dom';
-import Home from 'apps/medicapp/pages/home';
-import Orders from 'apps/medicapp/pages/orders';
-import Location from 'apps/medicapp/pages/location';
+
 /* eslint-disable-next-line */
 export interface DashBoardProps {}
 
-export function DashBoard(props: DashBoardProps) {
+export function DashBoard({ children }) {
   
 
   
@@ -79,8 +77,7 @@ export function DashBoard(props: DashBoardProps) {
       ></Menu>
         </Sider>
         <Content >
-         {/* <Orders/> */}
-         <Location/>
+            {children}
         </Content>
       </Layout>
       <Footer className={styles["AppFooter"]} >
