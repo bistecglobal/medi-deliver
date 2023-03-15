@@ -37,10 +37,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   table_calendar: ^3.0.9
   http: ^0.13.5
-  # camera: ^0.10.3+2
-  camera: ^0.9.7+1
+  camera: ^0.10.3+2
   path_provider: ^2.0.13
-
+  path: ^1.8.2
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

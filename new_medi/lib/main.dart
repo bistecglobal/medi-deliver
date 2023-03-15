@@ -1,7 +1,11 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:io';
+
 import 'package:new_medi/calander.dart';
 import 'package:new_medi/cam.dart';
+import 'package:new_medi/takePicture.dart';
 
 import 'Upload.dart';
 import 'dashbord.dart';
@@ -12,7 +16,8 @@ import 'trakOrder.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
-  runApp(MyWidget(cameras: cameras));
+  final firstCamera = cameras.first;
+  runApp(MyWidget(cameras: firstCamera));
 }
 
 class MyWidget extends StatefulWidget {
@@ -50,7 +55,11 @@ class _MyWidgetState extends State<MyWidget> {
           } else if (settings.name == '/trakOrder') {
             return MaterialPageRoute(builder: (_) => const TrakOrder());
           } else if (settings.name == '/cam') {
-            return MaterialPageRoute(builder: (_) => Cam(cameras));
+            return MaterialPageRoute(
+                builder: (_) => TakePictureScreen(
+                      cameras.first,
+                      camera: cameras,
+                    ));
           } else {
             return null;
           }
