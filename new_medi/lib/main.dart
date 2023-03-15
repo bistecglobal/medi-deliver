@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
+import 'dart:html';
 
 import 'package:new_medi/calander.dart';
 import 'package:new_medi/cam.dart';
