@@ -48,10 +48,18 @@ class _UploadState extends State<Upload> {
             const SizedBox(
               height: 20.0,
             ),
-            const Icon(
-              Icons.cloud_upload_sharp,
-              size: 80.0,
-              color: Colors.blue,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: _cam,
+                  icon: const Icon(
+                    Icons.camera_alt_outlined,
+                    size: 80,
+                    color: Colors.blueAccent,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 20.0,
@@ -73,13 +81,6 @@ class _UploadState extends State<Upload> {
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         fontSize: 20.0),
-                  ),
-                  IconButton(
-                    onPressed: _cam,
-                    icon: const Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
-                    ),
                   ),
                   IconButton(
                     onPressed: _booking,

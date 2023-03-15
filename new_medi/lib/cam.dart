@@ -3,13 +3,16 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 class Cam extends StatefulWidget {
-  const Cam({super.key});
+  var cameras;
+
+  Cam(this.cameras, {super.key});
 
   @override
-  State<Cam> createState() => _CamState();
+  State<Cam> createState() => _CamState(cameras);
 }
 
 class _CamState extends State<Cam> {
+  _CamState(this.cameras);
   late List<CameraDescription> cameras;
   late CameraController cameraController;
 
@@ -20,13 +23,12 @@ class _CamState extends State<Cam> {
     super.initState();
   }
 
-  void startCamera(int direction) async {
-    cameras = await availableCameras();
+  Future startCamera(int direction) async {
+    // cameras = await availableCameras();
 
     cameraController = CameraController(
-      cameras[direction],
-      ResolutionPreset.high,
-      enableAudio: false,
+      cameras.first,
+      ResolutionPreset.medium,
     );
 
     await cameraController.initialize().then((value) {

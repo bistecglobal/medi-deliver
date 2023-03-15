@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:new_medi/calander.dart';
 import 'package:new_medi/cam.dart';
@@ -8,18 +9,26 @@ import 'login.dart';
 import 'questions.dart';
 import 'trakOrder.dart';
 
-void main() {
-  runApp(const MyWidget());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final cameras = await availableCameras();
+  runApp(MyWidget(cameras: cameras));
 }
 
 class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+  final cameras;
+
+  const MyWidget({super.key, this.cameras});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<MyWidget> createState() => _MyWidgetState(cameras: cameras);
 }
 
 class _MyWidgetState extends State<MyWidget> {
+  final cameras;
+
+  _MyWidgetState({this.cameras});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -41,7 +50,7 @@ class _MyWidgetState extends State<MyWidget> {
           } else if (settings.name == '/trakOrder') {
             return MaterialPageRoute(builder: (_) => const TrakOrder());
           } else if (settings.name == '/cam') {
-            return MaterialPageRoute(builder: (_) => const Cam());
+            return MaterialPageRoute(builder: (_) => Cam(cameras));
           } else {
             return null;
           }
