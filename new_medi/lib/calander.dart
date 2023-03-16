@@ -3,6 +3,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import 'questions.dart';
 
+//  <uses-permission android:name="android.permission.INTERNET" />
 class Booking extends StatefulWidget {
   const Booking({super.key});
 

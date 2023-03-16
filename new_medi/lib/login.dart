@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'dashbord.dart';
 
 Future<Album> fetchAlbum() async {
-  final response = await http
-      .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/6'));
+  final response =
+      await http.get(Uri.parse('http://localhost:7117/api/Function1'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
@@ -67,11 +67,11 @@ class _MyLoginPageState extends State<MyLoginPage> {
     // ignore: avoid_print
     print("_userIdController");
 
-    // var userId = futureAlbum.then((album) => album.username);
-    // var password = futureAlbum.then((album) => album.password);
+    var userId = futureAlbum.then((album) => album.username);
+    var password = futureAlbum.then((album) => album.password);
 
-    var userId = "abc";
-    var password = "123";
+    // var userId = "abc";
+    // var password = "123";
 
     // ignore: unrelated_type_equality_checks
     if (userId == _userIdController.text &&
