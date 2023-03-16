@@ -1,11 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:io';
-import 'dart:html';
 
 import 'package:new_medi/calander.dart';
-import 'package:new_medi/cam.dart';
 import 'package:new_medi/takePicture.dart';
 
 import 'Upload.dart';
@@ -58,7 +55,7 @@ class _MyWidgetState extends State<MyWidget> {
           } else if (settings.name == '/cam') {
             return MaterialPageRoute(
                 builder: (_) => TakePictureScreen(
-                      cameras.first,
+                      cameras.firstCamera,
                       camera: cameras,
                     ));
           } else {
