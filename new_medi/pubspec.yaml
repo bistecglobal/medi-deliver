@@ -40,6 +40,7 @@ dependencies:
   camera: ^0.10.3+2
   path_provider: ^2.0.13
   path: ^1.8.2
+  # cupertino_icons: ^1.0.2
   
 dev_dependencies:
   flutter_test:
@@ -67,7 +68,10 @@ flutter:
     - images/packing.jpg
     - images/doorstep.jpg
     - images/processingDel.jpg
-    - images/pac.jpg
+    - images/Group 50.png
+    - images/Group 51.png
+    - images/Group 52.png
+    - images/Group 53.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
