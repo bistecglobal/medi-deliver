@@ -29,7 +29,7 @@ const handleSave =(e)=>{
 
   const url ='http://localhost:7117/api/Function1';
   axios.post(url,data).then((result)=>{
-      alert(result)
+      console.log(result)
       navigate.push('/home');
      
     

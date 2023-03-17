@@ -28,7 +28,7 @@ namespace Medi_Deliver
 
             var OrderToUpdate = await repository.GetAsync (id);
             var mc = await System.Text.Json.JsonSerializer.DeserializeAsync<Order>(req.Body);
-            OrderToUpdate.MedicineCost = mc.MedicineCost;
+            //OrderToUpdate.MedicineCost = mc.MedicineCost;
             OrderToUpdate.Date = mc.Date;
 
             OrderToUpdate.Status = mc.Status;

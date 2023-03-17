@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable react-hooks/rules-of-hooks */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Table, Modal, Input, Form, Space, DatePicker, Select,Upload, Statistic, message, Tag } from "antd";
 import { useState } from "react";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -9,6 +9,7 @@ import { LoadingOutlined} from '@ant-design/icons';
 import { UploadOutlined } from '@ant-design/icons';
 import { TimePicker } from 'antd';
 import type { Dayjs } from 'dayjs';
+import axios from 'axios';
 
 
 const orders = () => {
@@ -18,7 +19,7 @@ const orders = () => {
     const [firstval,setfirstnameval]= useState("");
     const [startdate, setDateS] = React.useState(false);
     const [imageUrl, setImageUrl] = useState('');
-  const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [timeval,settimeval]= useState("");
   const [addressval,setemailval]= useState("");
   const [statusval,setselectstatus]= useState("");
@@ -33,9 +34,9 @@ const orders = () => {
 //     Status: statusval,
 //   }]);
 
-  const setFirstNameVal = (value:any) =>{
-    setfirstnameval(value);
-};
+//   const setFirstNameVal = (value:any) =>{
+//     setfirstnameval(value);
+// };
 function setStartDate(startdate, dateString) {
     setDateS(dateString);
   }
@@ -55,6 +56,18 @@ const setSelectStatus = (value) =>{
     setselectstatus(value);
 };
 
+const [dataSource, setDataSource] = useState([
+  {
+    Id:firstval,
+    Date:startdate,
+    Time:timevalue,
+    Address:addressval,
+    Prescription:imageUrl,
+    Status:statusval
+  },
+
+]);
+
 const handleUpload = (info) => {
     if (info.file.status === 'uploading') {
        
@@ -73,12 +86,12 @@ const handleUpload = (info) => {
     }
   };
 
-//   const uploadButton = (
-//     <div>
-//       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-//       <div style={{ marginTop: 8 }}>Upload</div>
-//     </div>
-//   );
+  const uploadButton = (
+    <div>
+      {loading ? <LoadingOutlined /> : <PlusOutlined />}
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
 
 const uploadProps = {
     name: 'image',
@@ -97,75 +110,45 @@ const uploadProps = {
 
 
 
-
+ 
 
     const [isEditing, setIsEditing] = useState(false);
   const [editingPatient, setEditingPatient] = useState(null);
-  const [dataSource, setDataSource] = useState([
-    {
-      id: 1,
-      date: "2023-03-03",
-      time: "10:30",
-      address: "John Address",
-      prescription:"image1.png",
-      status:"Active"
-      
-    },
-    {
-      id: 2,
-      date: "2023-03-05",
-      time: "10:30",
-      address: "Colombo",
-      prescription:"image2.png",
-      status:"Processing"
-    },
-    {
-      id: 3,
-      date: "2023-03-12",
-      time: "10:30",
-      address: "Kurunegala",
-      prescription:"image3.png",
-      status:"Delivered"
-    },
   
-  ]);
   const columns = [
     {
       key: "1",
       title: "Order ID",
-      dataIndex: "id",
+      dataIndex: "Id",
     },
     {
       key: "2",
       title: "Date",
-      dataIndex: "date",
+      dataIndex: "Date",
     },
     {
       key: "3",
       title: "Time",
-      dataIndex: "time",
+      dataIndex: "Time",
     },
     {
       key: "4",
       title: "Address",
-      dataIndex: "address",
+      dataIndex: "Address",
     },
     {
         key: "5",
         title: "Prescription",
-        dataIndex: "prescription",
+        dataIndex: "Prescription",
       },
       {
         key: "6",
         title: "Status",
-        dataIndex:"status",
-      //   render: (record) => {
-      //     return (
-      //       <>
-      //       if ()
-      //       </>
-      //     )
-      // },
+        dataIndex:"Status",
+      render:(tag)=>{
+        const color =tag.includes('Active')?'Blue':tag.includes('Processing')?"Green":tag.includes('Delivered')?"Red":"White"
+        return <Tag color={color} key={tag}>{tag}</Tag>
+      }
     },
       
     {
@@ -182,7 +165,7 @@ const uploadProps = {
             />
             <DeleteOutlined
               onClick={() => {
-                onDeletePatient(record);
+                onDeletePatient(record.Id);
               }}
               style={{ color: "red", marginLeft: 12 }}
             />
@@ -194,48 +177,58 @@ const uploadProps = {
   const handleSave =(e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
     e.preventDefault();
     const newPaient ={
-      
-      id:firstval,
-      date: startdate,
-      time: timevalue,
-      address:addressval,
-      prescription:imageUrl,
-      status:statusval
+      Id:firstval,
+      Date: startdate,
+      Time: timevalue,
+      Address:addressval,
+      Prescription:imageUrl,
+      Status:statusval
       
     }
    
-    // setData2(pre=>{
-    //   return[...pre,newPaient]
-    // })
-    setDataSource((pre:any)=> {
+    setDataSource(pre=> {
         return [...pre,newPaient];
       });
       
-
+//post data
   const data ={
-    FirstName: firstval,
-    StartDate: startdate,
-    Time: timevalue,
-    EmailAddress : addressval,
-    prescription:imageUrl,
-    Status: statusval,
+    Date:startdate,
+    Time:timevalue,
+    Address:addressval,
+    Prescription:imageUrl,
+    Status:statusval
    
   };
+
+  console.log("abc",data)
+  const url ='http://localhost:7117/api/SaveOrders';
+  axios.post(url,data).then((result)=>{
+  
+     alert(result.status)
+
+  }).catch((error)=>{
+    alert(error);
+  });
 }
+const [totalPages, setTotalPages] =useState(1);
+const [loadingg, setLoadingg] =useState(false);
+
+//get data
+useEffect(()=>{
+  getData(1);
+},[])
+
+const getData =async(page:number) =>{
+  setLoadingg(true)
+  const result = await  axios.get('http://localhost:7117/api/GetOrder?pageSize=10&PageNumber=1');
+  console.log(result.data)
+  setDataSource(result.data)
+  
+  setTotalPages(10);
+  setLoadingg(false);
+ }
 
 
-//   const onAddStudent = () => {
-//     const randomNumber = parseInt("100");
-//     const newStudent = {
-//       id: randomNumber,
-//       name: "Name " + randomNumber,
-//       email: randomNumber + "@gmail.com",
-//       address: "Address " + randomNumber,
-//     };
-//     setDataSource((pre) => {
-//       return [...pre, newStudent];
-//     });
-//   };
   const onDeletePatient = (record) => {
     Modal.confirm({
       title: "Are you sure, you want to delete this Patient record?",
@@ -243,8 +236,13 @@ const uploadProps = {
       okType: "danger",
       onOk: () => {
         setDataSource((pre) => {
-          return pre.filter((student) => student.id !== record.id);
+          return pre.filter( (student) => student.Id !== record);
+          // (student) => student.Id !== record.Id)
         });
+        
+        axios.delete(`http://localhost:7117/api/Order/${record}`)
+       
+        
       },
     });
   };
@@ -265,7 +263,7 @@ const uploadProps = {
   </Form.Item>
   <div style={{ paddingLeft:100}}>
      <Space align="center" size={20} style={{paddingTop:20}}>
-    <p>OrderId</p>         
+    {/* <p>OrderId</p>         
       <Form.Item style={{paddingTop:22}}
       rules={[
         {
@@ -274,7 +272,7 @@ const uploadProps = {
         }]}>
       <Input placeholder='Order Id' value={firstval} 
       onChange={(e)=>{setFirstNameVal(e.target.value)}} style={{width:160}} />
-      </Form.Item>
+      </Form.Item> */}
       
     <p>Date</p>
      <Space>
@@ -284,16 +282,7 @@ const uploadProps = {
      <Space align="center">
        
      <p>Time</p>
-     {/* <Form.Item style={{paddingTop:22}}
-      rules={[
-        {
-          required:true,
-          message:"Time is required"
-        } ]}>
-      <Input placeholder='Time' value={timeval} 
-      onChange={(e)=>{setTimeVal(e.target.value)}} style={{width:160}} />
-      </Form.Item> */}
-      <TimePicker   onChange={onChangeTime}  />;
+      <TimePicker   onChange={onChangeTime}  />
       <p>Address</p>
       <Form.Item style={{paddingTop:22}}
        rules={[
@@ -313,9 +302,9 @@ const uploadProps = {
          key ={index}  value={Status}>{Status}    </Select.Option> 
         })}
       </Select>
-      </Space>
+      
       <p>Upload Picture</p>
-      {/* <Upload
+      <Upload
       name="avatar"
       listType="picture-card"
       className="avatar-uploader"
@@ -328,15 +317,16 @@ const uploadProps = {
       ) : (
         uploadButton
       )}
-    </Upload>  */}
+    </Upload> 
     
-    <Upload {...uploadProps}>
+    {/* <Upload {...uploadProps}>
         {imageUrl ? (
           <img src={imageUrl} alt="uploaded image" style={{ maxWidth: 200 }} />
         ) : (
           renderUploadButton()
         )}
-      </Upload>
+      </Upload> */}
+      </Space>
 
 
      <Form.Item style={{display:'flex',justifyContent:'center'}}>
@@ -354,7 +344,15 @@ const uploadProps = {
 
         <header className="App-header">
         {/* <Button onClick={onAddStudent}>Add a new Student</Button> */}
-        <Table columns={columns} dataSource={dataSource} style={{paddingTop:30}}></Table>
+        <Table loading={loadingg} columns={columns} dataSource={dataSource} style={{paddingTop:30}}
+        pagination={{
+          pageSize:3,
+          total:totalPages,
+          onChange:(page)=>{
+            getData(page=1)
+          }
+         }} 
+        ></Table>
         <Modal
           title="Edit Patient"
           visible={isEditing}
@@ -365,7 +363,7 @@ const uploadProps = {
           onOk={() => {
             setDataSource((pre) => {
               return pre.map((patient) => {
-                if (patient.id === editingPatient.id) {
+                if (patient.Id === editingPatient.id) {
                   return editingPatient;
                 } else {
                   return patient;
@@ -375,12 +373,14 @@ const uploadProps = {
             resetEditing();
           }}
         >
+          <p>Date of Order</p>
           <DatePicker
               onChange={(date, dateString) =>
                 setEditingPatient({ ...editingPatient, date: dateString })
               }
               
             />
+          <p>Order Time </p>
           <Input
             value={editingPatient?.time}
             onChange={(e) => {
@@ -389,6 +389,7 @@ const uploadProps = {
               });
             }}
           />
+          <p>Address Of the Patient</p>
           <Input
             value={editingPatient?.address}
             onChange={(e) => {
@@ -397,6 +398,7 @@ const uploadProps = {
               });
             }}
           />
+          <p>Status Of the Order</p>
          <Select
           value={editingPatient?.status}
           onChange={(status) => {
@@ -413,6 +415,8 @@ const uploadProps = {
     );
   })}
 </Select>
+          <p>Image of the Order</p>
+          <img src={"/medi.jpg"} alt="profiles" style={{position:"relative",top:"0",left:"30",right:"20"}}/>
         
         </Modal>
       </header>

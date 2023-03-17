@@ -24,8 +24,11 @@ namespace Medi_Deliver
 
             var order = await System.Text.Json.JsonSerializer.DeserializeAsync<Order>(req.Body);
 
+           
+
+            //var created = await repository.CreateAsync(new Order {  Id = order.Id, Date = order.Date, Time = order.Time ,Address=order.Address, Prescription =order.Prescription, Status=order.Status});
+            var created = await repository.CreateAsync(order);
             var response = req.CreateResponse(HttpStatusCode.OK);
-            var created = await repository.CreateAsync(new Order {  Details = order.Details, Date = order.Date, Time = order.Time , Prescription =order.Prescription});
             await response.WriteAsJsonAsync(created);
             
             response.WriteString("Welcome to Azure Functions!");

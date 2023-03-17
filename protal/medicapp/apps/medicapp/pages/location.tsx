@@ -4,17 +4,24 @@
 import React from 'react'
 import { Button, Table, Form, Input, Space, Modal } from "antd";
 import {useState,useEffect} from 'react';
+import axios from 'axios';
 
 
 
 
 const location = () => {
-  const [dataSource, setDataSource] = useState([]);
+  const [firstval,setfirstnameval]= useState("");
   const [editingRow, setEditingRow] = useState(null);
   const [form] = Form.useForm();
   const [nameval,setnameval]= useState("");
   const [locationval,setlocationval]= useState("");
-  
+  const [dataSource, setDataSource] = useState([
+    {
+      Id:firstval,
+      M_Name :nameval,
+      M_Location:locationval,
+    }
+  ]);
 
   // useEffect(() => {
   //   const data = [];
@@ -34,18 +41,18 @@ const setNameVal = (value:any) =>{
 const setLocationVal = (value:any) =>{
     setlocationval(value);
  };
- const x= Math.random()*10
+//  const x= Math.random()*10
 
   const columns = [
    
     {
       title: "Hospital Name",
-      dataIndex: "name",
+      dataIndex: "M_Name",
       render: (text, record) => {
-        if (editingRow === record.key) {
+        if (editingRow === record.Id) {
           return (
             <Form.Item
-              name="name">
+              name="M_Name">
               <Input />
             </Form.Item>
           );
@@ -56,11 +63,11 @@ const setLocationVal = (value:any) =>{
     },
     {
       title: "Hospital Location",
-      dataIndex: "address",
+      dataIndex: "M_Location",
       render: (text, record) => {
-        if (editingRow === record.key) {
+        if (editingRow === record.Id) {
           return (
-            <Form.Item name="address">
+            <Form.Item name="M_Location">
               <Input />
             </Form.Item>
           );
@@ -77,7 +84,7 @@ const setLocationVal = (value:any) =>{
             <Button type="link"
                style={{ color: "green"}}
               onClick={() => {
-                setEditingRow(record.key);
+                setEditingRow(record.Id);
                 form.setFieldsValue({
                   name: record.name,
                   address: record.address,
@@ -91,13 +98,13 @@ const setLocationVal = (value:any) =>{
             </Button>
             <Button type="link"
               onClick={() => {
-                onDeletePatient(record);
+                onDeletePatient(record.Id);
               }}
               style={{ color: "red"}}
             >
               Delete
             </Button>
-            
+      
           </>
         );
       },
@@ -108,20 +115,51 @@ const setLocationVal = (value:any) =>{
     e.preventDefault();
   
     const manageLocation ={
-      key:x,
-      name :nameval,
-      address:locationval,
+      Id:firstval,
+      M_Name :nameval,
+      M_Location:locationval,
       
     }
     setDataSource(pre=>{
       return[...pre,manageLocation]
-    })
+    });
+
+    //post data
+  const data ={
+     M_Name :nameval,
+     M_Location:locationval,
+   
+  };
+
+  console.log("abc",data)
+  const url ='http://localhost:7117/api/SaveMedicalCenters';
+  axios.post(url,data).then((result)=>{
+  
+     alert(result.status)
+
+  }).catch((error)=>{
+    alert(error);
+  });
 }
+//get data
+useEffect(() => {
+  fetchData();
+}, []);
+
+const fetchData =async() => {
+  const result = await axios.get('http://localhost:7117/api/GetMedicalCenters?pageSize=10&PageNumber=1');
+  
+  setDataSource(result.data);
+}
+
+
+
+
 
   const onFinish = (values) => {
     console.log(values)
     const updatedDataSource = [...dataSource];
-    updatedDataSource.splice(editingRow,1,{...values, key: editingRow })
+    updatedDataSource.splice(editingRow,1,{...values, Id: editingRow })
     console.log(updatedDataSource)
     setDataSource(updatedDataSource);
     setEditingRow(null);
@@ -134,8 +172,9 @@ const setLocationVal = (value:any) =>{
       okType: "danger",
       onOk: () => {
         setDataSource((pre) => {
-          return pre.filter((patient) => patient.key !== record.key);
+          return pre.filter((patient) => patient.Id !== record);
         });
+        axios.delete(`http://localhost:7117/api/MedicalCenter/${record}`)
       },
     });
   };

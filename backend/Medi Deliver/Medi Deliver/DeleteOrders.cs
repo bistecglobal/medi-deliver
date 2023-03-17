@@ -23,9 +23,6 @@ namespace Medi_Deliver
             await repository.DeleteAsync(id);
 
             var response = req.CreateResponse(HttpStatusCode.NoContent);
-            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-
-            
             response.WriteString("Welcome to Azure Functions!");
 
             return response;

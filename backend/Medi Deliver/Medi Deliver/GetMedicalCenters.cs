@@ -47,10 +47,6 @@ namespace Medi_Deliver
             IPage<MedicalCenter> medicalCenter =
                 await repository.PageAsync(pageNumber: page, pageSize: size);
             await response.WriteAsJsonAsync(medicalCenter.Items);
-         
-
-
-            response.WriteString("Get Medical Centers");
 
             return response;
         }
