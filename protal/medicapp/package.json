@@ -5,7 +5,7 @@
   "scripts": {
     "start": "nx run medicapp:serve:development",
     "nx": "nx",
-    "build": "nx run medicapp:build:production"
+    "build": "nx run medicapp:export:production"
   },
   "private": true,
   "dependencies": {
