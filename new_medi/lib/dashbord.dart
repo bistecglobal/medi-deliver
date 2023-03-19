@@ -76,6 +76,15 @@ class _DashBoardState extends State<DashBoard> {
                             dropdownvalue = newValue!;
                           });
                         }),
+                    DropdownButton<String>(
+                      items: <String>['A', 'B', 'C', 'D'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (_) {},
+                    ),
                   ],
                 ),
               ),
