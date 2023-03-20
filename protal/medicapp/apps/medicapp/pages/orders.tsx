@@ -1,12 +1,15 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react'
-import { Button, Table, Modal, Input, Form, Space, DatePicker, Select,Upload, Statistic, message } from "antd";
+import { Button, Table, Modal, Input, Form, Space, DatePicker, Select,Upload, Statistic, message, Tag } from "antd";
 import { useState } from "react";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import {PlusOutlined} from '@ant-design/icons/lib/icons'
 import { LoadingOutlined} from '@ant-design/icons';
 import { UploadOutlined } from '@ant-design/icons';
+import { TimePicker } from 'antd';
+import type { Dayjs } from 'dayjs';
+
 
 const orders = () => {
 
@@ -19,6 +22,7 @@ const orders = () => {
     const [timeval,settimeval]= useState("");
   const [addressval,setemailval]= useState("");
   const [statusval,setselectstatus]= useState("");
+  const [timevalue, settimevalue] = React.useState(false);
 
 
 //   const [data , setData2] =useState([{
@@ -41,8 +45,11 @@ function setStartDate(startdate, dateString) {
   const setAddVal = (value:any) =>{
       setemailval(value);
   };
-  const setTimeVal = (value:any) =>{
-    settimeval(value);
+//   const setTimeVal = (value:any) =>{
+//     settimeval(value);
+// };
+const onChangeTime = (time,timeString) => {
+  settimevalue(timeString);
 };
 const setSelectStatus = (value) =>{
     setselectstatus(value);
@@ -151,8 +158,16 @@ const uploadProps = {
       {
         key: "6",
         title: "Status",
-        dataIndex: "status",
-      },
+        dataIndex:"status",
+      //   render: (record) => {
+      //     return (
+      //       <>
+      //       if ()
+      //       </>
+      //     )
+      // },
+    },
+      
     {
       key: "7",
       title: "Actions",
@@ -182,12 +197,13 @@ const uploadProps = {
       
       id:firstval,
       date: startdate,
-      time: timeval,
+      time: timevalue,
       address:addressval,
       prescription:imageUrl,
-      status: statusval,
+      status:statusval
       
     }
+   
     // setData2(pre=>{
     //   return[...pre,newPaient]
     // })
@@ -199,7 +215,7 @@ const uploadProps = {
   const data ={
     FirstName: firstval,
     StartDate: startdate,
-    Time: timeval,
+    Time: timevalue,
     EmailAddress : addressval,
     prescription:imageUrl,
     Status: statusval,
@@ -242,12 +258,13 @@ const uploadProps = {
   };
     return (
       <div >
-    <div style={{ paddingLeft:100
-
-}}>
-        
+        <div>
     <Form >
-     <Space align="center" size={20} style={{paddingTop:50}}>
+    <Form.Item>
+   <h1 style={{fontWeight:'bold',paddingTop:30,fontSize:20, paddingLeft:20}}>Manage Orders</h1>
+  </Form.Item>
+  <div style={{ paddingLeft:100}}>
+     <Space align="center" size={20} style={{paddingTop:20}}>
     <p>OrderId</p>         
       <Form.Item style={{paddingTop:22}}
       rules={[
@@ -267,7 +284,7 @@ const uploadProps = {
      <Space align="center">
        
      <p>Time</p>
-     <Form.Item style={{paddingTop:22}}
+     {/* <Form.Item style={{paddingTop:22}}
       rules={[
         {
           required:true,
@@ -275,7 +292,8 @@ const uploadProps = {
         } ]}>
       <Input placeholder='Time' value={timeval} 
       onChange={(e)=>{setTimeVal(e.target.value)}} style={{width:160}} />
-      </Form.Item>
+      </Form.Item> */}
+      <TimePicker   onChange={onChangeTime}  />;
       <p>Address</p>
       <Form.Item style={{paddingTop:22}}
        rules={[
@@ -324,8 +342,10 @@ const uploadProps = {
      <Form.Item style={{display:'flex',justifyContent:'center'}}>
       <Button htmlType="submit" icon={<PlusOutlined/>} type="primary"   onClick={(e)=>{ handleSave(e) }} > Add a Patient</Button>
      </Form.Item>
+     </div>
      </Form>
      </div>
+     
 
      
 

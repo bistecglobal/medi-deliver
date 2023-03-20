@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React from 'react'
-import { Button, Table, Form, Input, Space } from "antd";
+import { Button, Table, Form, Input, Space, Modal } from "antd";
 import {useState,useEffect} from 'react';
-import FormItem from 'antd/es/form/FormItem';
+
 
 
 
@@ -13,27 +14,30 @@ const location = () => {
   const [form] = Form.useForm();
   const [nameval,setnameval]= useState("");
   const [locationval,setlocationval]= useState("");
+  
 
-//   useEffect(() => {
-//     const data = [];
-//     for (let index = 0; index < 7; index++) {
-//       data.push({
-//         key: `${index}`,
-//         name: `Hospital Name ${index}`,
-//         address: `Hospital Location ${index}`,
-//       });
-//     }
-//     setDataSource(data);
-//   }, []);
+  // useEffect(() => {
+  //   const data = [];
+  //   for (let index = 0; index <7; index++) {
+  //     data.push({
+  //       key: `${index}`,
+  //       name: `Hospital Name ${index}`,
+  //       address: `Hospital Location ${index}`,
+  //     });
+  //   }
+  //   setDataSource(data);
+  // }, []);
+
 const setNameVal = (value:any) =>{
    setnameval(value);
 };
 const setLocationVal = (value:any) =>{
     setlocationval(value);
  };
-
+ const x= Math.random()*10
 
   const columns = [
+   
     {
       title: "Hospital Name",
       dataIndex: "name",
@@ -41,9 +45,7 @@ const setLocationVal = (value:any) =>{
         if (editingRow === record.key) {
           return (
             <Form.Item
-              name="name"
-              
-            >
+              name="name">
               <Input />
             </Form.Item>
           );
@@ -69,11 +71,11 @@ const setLocationVal = (value:any) =>{
     },
     {
       title: "Actions",
-      render: (_, record) => {
+      render: (_,record) => {
         return (
           <>
-            <Button
-              type="link"
+            <Button type="link"
+               style={{ color: "green"}}
               onClick={() => {
                 setEditingRow(record.key);
                 form.setFieldsValue({
@@ -84,18 +86,29 @@ const setLocationVal = (value:any) =>{
             >
               Edit
             </Button>
-            <Button type="link" htmlType="submit">
+            <Button type="link" htmlType="submit" style={{ color: "blue"}} >
               Save
             </Button>
+            <Button type="link"
+              onClick={() => {
+                onDeletePatient(record);
+              }}
+              style={{ color: "red"}}
+            >
+              Delete
+            </Button>
+            
           </>
         );
       },
     },
   ];
-  const handleSave =(e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
+ 
+  const handleSave =( e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
     e.preventDefault();
+  
     const manageLocation ={
-      
+      key:x,
       name :nameval,
       address:locationval,
       
@@ -106,17 +119,35 @@ const setLocationVal = (value:any) =>{
 }
 
   const onFinish = (values) => {
+    console.log(values)
     const updatedDataSource = [...dataSource];
-    updatedDataSource.splice(editingRow, 1, { ...values, key: editingRow });
+    updatedDataSource.splice(editingRow,1,{...values, key: editingRow })
+    console.log(updatedDataSource)
     setDataSource(updatedDataSource);
     setEditingRow(null);
   };
+
+  const onDeletePatient = (record) => {
+    Modal.confirm({
+      title: "Are you sure, you want to delete this Patient record?",
+      okText: "Yes",
+      okType: "danger",
+      onOk: () => {
+        setDataSource((pre) => {
+          return pre.filter((patient) => patient.key !== record.key);
+        });
+      },
+    });
+  };
+
+
     return (
         <div className="App">
       <header className="App-header">
 
         <Form>
         <Space  size={20} style={{paddingTop:50,display:'flex',justifyContent:'center'}} >
+   
         <p>Name</p>         
       <Form.Item style={{paddingTop:22}} >
       <Input placeholder='Hospital name' value={nameval} 
@@ -129,18 +160,18 @@ const setLocationVal = (value:any) =>{
       </Form.Item>
       </Space>
       <Form.Item style={{display:'flex',justifyContent:'center'}}>
-      <Button htmlType="submit"  type="primary"   onClick={(e)=>{ handleSave(e) }} > Add a Hospital</Button>
+      <Button   type="primary"   onClick={(e)=>{ handleSave(e) }} > Add a Hospital</Button>
+      
      </Form.Item>
       
         </Form>
-        <Form form={form} onFinish={onFinish}>
+        <Form  form={form} onFinish={onFinish}>
             <Form.Item>
                 <h1 style={{fontWeight:'bold',paddingLeft:30,paddingTop:30,fontSize:20}}>Manage Locations</h1>
             </Form.Item>
-
-
-          <Table columns={columns} dataSource={dataSource}></Table>
+            <Table columns={columns} dataSource={dataSource}></Table>
         </Form>
+        
       </header>
     </div>
        
@@ -148,3 +179,4 @@ const setLocationVal = (value:any) =>{
 }
 
 export default location
+

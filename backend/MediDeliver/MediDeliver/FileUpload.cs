@@ -38,30 +38,7 @@ namespace Medi_Deliver
             
 
         }
-        ///// <summary>
-        ///// Upload image to storage.
-        ///// </summary>
-        ///// <param name="imagePath">The folder path.</param>
-        ///// <param name="content">The content.</param>
-        ///// <param name="cancellationToken">The cancellation token.</param>
-        ///// <returns>The full url.</returns>
-        //public async Task<string> UploadImageAsync(string imagePath, Stream content, CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    try
-        //    {
-        //        BlobContainerClient blobContainerClient = new BlobContainerClient(_connectionString, _blobContainer);
-        //        blobContainerClient.CreateIfNotExists(Azure.Storage.Blobs.Models.PublicAccessType.Blob);
-        //        await blobContainerClient.GetBlobClient(imagePath).DeleteIfExistsAsync();
-        //        var file = await blobContainerClient.UploadBlobAsync(imagePath, content, cancellationToken);
-
-        //        return $"{blobContainerClient.Uri.AbsoluteUri}/{imagePath}";
-        //    }
-        //    catch (System.Exception ex)
-        //    {
-        //        _logger.LogError(ex, ex.Message);
-        //        throw;
-        //    }
-        //}
+       
 
         [Function("FileUpload")]
         public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous,"post","get" , Route =null)] HttpRequestData req,
@@ -74,16 +51,8 @@ namespace Medi_Deliver
             //// get query params
             //var testvalue = executionContext.BindingContext.BindingData["testparams"];
             // get form-body        
-            var parsedFormBody = MultipartFormDataParser.ParseAsync(req.Body);
-            var file = parsedFormBody.Result.Files[0];
-
-
-            var response = req.CreateResponse(HttpStatusCode.OK);
-           
-
-            
-      
-
+            var parsedFormBody =  await MultipartFormDataParser.ParseAsync(req.Body);
+            var file = parsedFormBody.Files[0];
 
             var fileName = file.FileName;
             var fileContent = file.Data;
@@ -99,6 +68,7 @@ namespace Medi_Deliver
             // create response
             //var response = req.CreateResponse(HttpStatusCode.OK);
             //response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+            var response = req.CreateResponse(HttpStatusCode.OK);
 
             // return file URL
             var fileUrl = $"{blobContainerClient.Uri.AbsoluteUri}/{fileName}";
