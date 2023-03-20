@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable react-hooks/rules-of-hooks */
+import './styles.css';
 import React, { useEffect } from 'react'
-import { Button, Table, Modal, Input, Form, Space, DatePicker, Select,Upload, Statistic, message, Tag } from "antd";
+import { Button, Table, Modal, Input, Form, Space, DatePicker, Select,Upload, Statistic, message, Tag, Card } from "antd";
 import { useState } from "react";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import {PlusOutlined} from '@ant-design/icons/lib/icons'
@@ -12,13 +13,14 @@ import type { Dayjs } from 'dayjs';
 import axios from 'axios';
 
 
+
 const orders = () => {
 
     
     const selectStatus =['Active',"Processing","Delivered","Canceled"]
     const [firstval,setfirstnameval]= useState("");
     const [startdate, setDateS] = React.useState(false);
-    const [imageUrl, setImageUrl] = useState('');
+    const [imageUrl, setimageurl] = useState(null);
     const [loading, setLoading] = useState(false);
     const [timeval,settimeval]= useState("");
   const [addressval,setemailval]= useState("");
@@ -56,56 +58,65 @@ const setSelectStatus = (value) =>{
     setselectstatus(value);
 };
 
+const setImageUrl = (info) => {
+  if (info.file.status === "done") {
+    const url = URL.createObjectURL(info.file.originFileObj);
+    setimageurl(url);
+  }
+};
+
 const [dataSource, setDataSource] = useState([
   {
     Id:firstval,
     Date:startdate,
     Time:timevalue,
     Address:addressval,
-    Prescription:imageUrl,
+    Image:imageUrl,
     Status:statusval
   },
 
 ]);
 
-const handleUpload = (info) => {
-    if (info.file.status === 'uploading') {
+
+
+// const handleUpload = (info) => {
+//     if (info.file.status === 'uploading') {
        
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === 'done') {
-      // Get the image URL and log it to the console
-      setImageUrl(info.file.response.url);
-      console.log(info.file.response.imageUrl);
-      message.success(`${info.file.name} uploaded successfully`);
-    }
-    if (info.file.status === 'error') {
-      setLoading(false);
-      message.error('Error uploading image');
-    }
-  };
+//       setLoading(true);
+//       return;
+//     }
+//     if (info.file.status === 'done') {
+//       // Get the image URL and log it to the console
+//       setImageUrl(info.file.response.url);
+//       console.log(info.file.response.imageUrl);
+//       message.success(`${info.file.name} uploaded successfully`);
+//     }
+//     if (info.file.status === 'error') {
+//       setLoading(false);
+//       message.error('Error uploading image');
+//     }
+//   };
 
-  const uploadButton = (
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
+//   const uploadButton = (
+//     <div>
+//       {loading ? <LoadingOutlined /> : <PlusOutlined />}
+//       <div style={{ marginTop: 8 }}>Upload</div>
+//     </div>
+//   );
 
-const uploadProps = {
-    name: 'image',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76', // replace with your upload URL
-    showUploadList: false,
-    onChange: handleUpload,
-  };
+// const uploadProps = {
+//     name: 'image',
+//     action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76', // replace with your upload URL
+//     showUploadList: false,
+//     onChange: handleUpload,
+//   };
 
-  const renderUploadButton = () => (
-    <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
+//   const renderUploadButton = () => (
+//     <div>
+//       {loading ? <LoadingOutlined /> : <PlusOutlined />}
+//       <div style={{ marginTop: 8 }}>Upload</div>
+//     </div>
+//   );
 
 
 
@@ -139,14 +150,15 @@ const uploadProps = {
     {
         key: "5",
         title: "Prescription",
-        dataIndex: "Prescription",
+        dataIndex: "Image",
       },
       {
         key: "6",
         title: "Status",
         dataIndex:"Status",
       render:(tag)=>{
-        const color =tag.includes('Active')?'Blue':tag.includes('Processing')?"Green":tag.includes('Delivered')?"Red":"White"
+        const color =tag.includes('Active')?'#2692df':tag.includes('Processing')?"#3addaa":tag.includes('Delivered')?"#d05f5f"
+        :tag.includes('Cancled')?"rgba(0, 0, 0, 0.19)":"White"
         return <Tag color={color} key={tag}>{tag}</Tag>
       }
     },
@@ -174,6 +186,7 @@ const uploadProps = {
       },
     },
   ];
+ 
   const handleSave =(e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
     e.preventDefault();
     const newPaient ={
@@ -181,7 +194,7 @@ const uploadProps = {
       Date: startdate,
       Time: timevalue,
       Address:addressval,
-      Prescription:imageUrl,
+      Image:imageUrl,
       Status:statusval
       
     }
@@ -195,7 +208,6 @@ const uploadProps = {
     Date:startdate,
     Time:timevalue,
     Address:addressval,
-    Prescription:imageUrl,
     Status:statusval
    
   };
@@ -204,12 +216,37 @@ const uploadProps = {
   const url ='http://localhost:7117/api/SaveOrders';
   axios.post(url,data).then((result)=>{
   
-     alert(result.status)
+     alert(result.data)
 
   }).catch((error)=>{
     alert(error);
   });
+
+  // const data2 ={
+  //   Image:imageUrl,
+  // }
+  const formData = new FormData();
+  formData.append("Image",imageUrl);
+  formData.append("Name","Nalin");
+
+  const url2 ='http://localhost:7117/api/FileUpload';
+  // axios.post(url2,data2).then((result)=>{
+  //   alert(result.data)
+  // }).catch((error)=>{
+  //   alert(error);
+  // });
+  fetch(url2, {
+    method: 'POST',
+    body: formData
+  })
+    
+   .catch((error)=>{
+    alert(error)
+   })
+    
 }
+
+
 const [totalPages, setTotalPages] =useState(1);
 const [loadingg, setLoadingg] =useState(false);
 
@@ -257,32 +294,28 @@ const getData =async(page:number) =>{
     return (
       <div >
         <div>
-    <Form >
+    <Form  className='container'>
+     
     <Form.Item>
    <h1 style={{fontWeight:'bold',paddingTop:30,fontSize:20, paddingLeft:20}}>Manage Orders</h1>
   </Form.Item>
   <div style={{ paddingLeft:100}}>
+ 
      <Space align="center" size={20} style={{paddingTop:20}}>
-    {/* <p>OrderId</p>         
-      <Form.Item style={{paddingTop:22}}
-      rules={[
-        {
-          required:true,
-          message:"Order Id is required"
-        }]}>
-      <Input placeholder='Order Id' value={firstval} 
-      onChange={(e)=>{setFirstNameVal(e.target.value)}} style={{width:160}} />
-      </Form.Item> */}
-      
+     
     <p>Date</p>
      <Space>
      <div ><DatePicker onChange={setStartDate}/></div>
      </Space>
+  
+    
      </Space>
-     <Space align="center">
-       
-     <p>Time</p>
+     
+     <Space align="center"> 
+     
+     <p className='time'>Time</p>
       <TimePicker   onChange={onChangeTime}  />
+     
       <p>Address</p>
       <Form.Item style={{paddingTop:22}}
        rules={[
@@ -295,6 +328,7 @@ const getData =async(page:number) =>{
       <Input placeholder='Address' value={addressval} 
        onChange={(e)=>{setAddVal(e.target.value)}} style={{width:160}}/>
       </Form.Item>
+      
       <p>Status</p>
       <Select   placeholder='Select Course' style={{width:160}} value={statusval} onChange={(value) => {setSelectStatus(value) }}  >
         {selectStatus.map((Status,index)=>{ 
@@ -304,7 +338,17 @@ const getData =async(page:number) =>{
       </Select>
       
       <p>Upload Picture</p>
-      <Upload
+      <Form.Item>
+      <Upload.Dragger listType="picture" onChange={setImageUrl} >
+        Drag Files Or
+        <br/>
+        <Button>Click Upload</Button>
+      </Upload.Dragger>
+      {/* {imageUrl && <img src={imageUrl} alt="uploaded"  style={{ width: '100%' }} />} */}
+     
+      </Form.Item>
+      
+      {/* <Upload
       name="avatar"
       listType="picture-card"
       className="avatar-uploader"
@@ -319,20 +363,23 @@ const getData =async(page:number) =>{
       )}
     </Upload> 
     
-    {/* <Upload {...uploadProps}>
+    <Upload {...uploadProps}>
         {imageUrl ? (
           <img src={imageUrl} alt="uploaded image" style={{ maxWidth: 200 }} />
         ) : (
           renderUploadButton()
         )}
       </Upload> */}
+      
+      
       </Space>
-
-
-     <Form.Item style={{display:'flex',justifyContent:'center'}}>
-      <Button htmlType="submit" icon={<PlusOutlined/>} type="primary"   onClick={(e)=>{ handleSave(e) }} > Add a Patient</Button>
+      
+      
+     <Form.Item >
+      <Button style={{display:'flex',justifyContent:'center'}} htmlType="submit" icon={<PlusOutlined/>} type="primary"   onClick={(e)=>{ handleSave(e) }} > Add a Order</Button>
      </Form.Item>
      </div>
+    
      </Form>
      </div>
      
@@ -346,7 +393,7 @@ const getData =async(page:number) =>{
         {/* <Button onClick={onAddStudent}>Add a new Student</Button> */}
         <Table loading={loadingg} columns={columns} dataSource={dataSource} style={{paddingTop:30}}
         pagination={{
-          pageSize:3,
+          pageSize:5,
           total:totalPages,
           onChange:(page)=>{
             getData(page=1)
@@ -416,7 +463,8 @@ const getData =async(page:number) =>{
   })}
 </Select>
           <p>Image of the Order</p>
-          <img src={"/medi.jpg"} alt="profiles" style={{position:"relative",top:"0",left:"30",right:"20"}}/>
+          {/* <img src={"/medi.jpg"} alt="profiles" style={{position:"relative",top:"0",left:"30",right:"20"}}/> */}
+          {imageUrl && <img src={imageUrl} alt="uploaded"  style={{ width: '100%' }} />}
         
         </Modal>
       </header>

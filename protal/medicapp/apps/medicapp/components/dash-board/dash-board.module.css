@@ -10,21 +10,43 @@
     flex-direction: column;
     width: 100vw;
     height: 100vh;
+    
+    font-family: 'Roboto';
+font-style: normal;
+font-weight: 500;
+font-size: 16px; 
+line-height: 19px;
+text-transform: capitalize;
+
 }
 .AppHeader{
-    height: 50px;
+    height:70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 4px 20px 4px 12px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    background-color: #2892BF;
 }
+.trigger {
+    
+    font-size: 18px;
+    line-height: 64px;
+    cursor: pointer;
+    transition: color 0.3s;
+    padding-right: 240px;
+  }
+  .trigger:hover {
+    color: #29f473;
+  }
 
 .SideMenu{
     height: 100%;
 }
 .SideMenuVertical{
     height: 100%;
+    color: #A2A2BF;
+    
 }
 .AppFooter{
     height: 50px;
@@ -32,5 +54,5 @@
     justify-content: space-evenly;
     align-items: center;
     border-top: 1px solid rgba(0, 0, 0, 0.15);
-    
+    background-color: #4cb0db;
     }

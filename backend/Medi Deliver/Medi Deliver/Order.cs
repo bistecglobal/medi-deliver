@@ -17,7 +17,8 @@ namespace Medi_Deliver
 
         public string Address { get; set; }
 
-        public string Prescription { get; set; }
+        //public string Prescription { get; set; }
+        public byte[] Image { get; set; }
         //public float MedicineCost { get; set; }
 
         public string Status { get; set; }

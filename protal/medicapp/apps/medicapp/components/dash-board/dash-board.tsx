@@ -1,12 +1,14 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable jsx-a11y/alt-text */
-import { Layout } from 'antd';
+import { Layout,theme } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import styles from './dash-board.module.css';
 import { BellFilled, MailOutlined } from "@ant-design/icons";
 import { Badge,  Image, Space, Typography } from "antd";
 import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
   AppstoreOutlined,
   ShopOutlined,
   ShoppingCartOutlined,
@@ -15,22 +17,37 @@ import {
 import { Menu } from "antd";
 import { useRouter } from "next/navigation";
 import { Route, Router, Routes } from 'react-router-dom';
+import React, { useState } from 'react';
+import { start } from 'repl';
 
 /* eslint-disable-next-line */
 export interface DashBoardProps {}
 
 export function DashBoard({ children }) {
-  
 
-  
+
   const navigate = useRouter();
   const { Header, Footer, Sider, Content } = Layout;
+
+  const [collapsed, setCollapsed] = useState(false);
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
+   
+
+
   return (
     <div className={styles['container']}>
       <Layout>
-      <Header className={styles["AppHeader"]}>
-      <Image width={40}  src={"/download.png"} ></Image>
-      <Typography.Title style={{color:'white'}}>Medical Dashboard</Typography.Title>
+      <Header className={styles["AppHeader"]} >
+      <Image width={60}  src={"/download.png"} style={{paddingLeft:20}} ></Image>
+      <div className={styles['trigger']}>
+      {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+            
+            onClick: () => setCollapsed(!collapsed),
+          })}
+          </div>
+      <Typography.Title style={{color:'white',paddingRight:300}}>Medical Dashboard</Typography.Title>
       <Space>
         <Badge  dot>
           <MailOutlined
@@ -43,8 +60,10 @@ export function DashBoard({ children }) {
       </Space>
       </Header>
       <Layout>
-        <Sider className={styles["SideMenu"]}>
+        <Sider className={styles["SideMenu"]} trigger={null} collapsible collapsed={collapsed}>
         <Menu
+        //  theme="dark"
+         defaultSelectedKeys={['1']}
         className={styles["SideMenuVertical"]}
         mode="vertical"
         onClick={(item) => {
@@ -82,11 +101,11 @@ export function DashBoard({ children }) {
       </Layout>
       <Footer className={styles["AppFooter"]} >
         
-      <Typography.Link href="tel:+123456789">+123456789</Typography.Link>
-      <Typography.Link href="https://www.google.com" target={"_blank"}>
+      <Typography.Link href="tel:+123456789" style={{color:'white'}}>+123456789</Typography.Link>
+      <Typography.Link href="https://www.google.com" target={"_blank"} style={{color:'white'}}>
         Privacy Policy
       </Typography.Link>
-      <Typography.Link href="https://www.google.com" target={"_blank"}>
+      <Typography.Link href="https://www.google.com" target={"_blank"} style={{color:'white'}}>
         Terms of Use
       </Typography.Link>
       </Footer>

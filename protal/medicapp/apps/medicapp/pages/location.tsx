@@ -82,7 +82,7 @@ const setLocationVal = (value:any) =>{
         return (
           <>
             <Button type="link"
-               style={{ color: "green"}}
+               style={{ color: "green", fontWeight:'bold'}}
               onClick={() => {
                 setEditingRow(record.Id);
                 form.setFieldsValue({
@@ -93,14 +93,14 @@ const setLocationVal = (value:any) =>{
             >
               Edit
             </Button>
-            <Button type="link" htmlType="submit" style={{ color: "blue"}} >
+            <Button type="link" htmlType="submit" style={{ color: "blue",fontWeight:'bold'}} >
               Save
             </Button>
             <Button type="link"
               onClick={() => {
                 onDeletePatient(record.Id);
               }}
-              style={{ color: "red"}}
+              style={{ color: "red",fontWeight:'bold'}}
             >
               Delete
             </Button>
@@ -184,7 +184,7 @@ const fetchData =async() => {
         <div className="App">
       <header className="App-header">
 
-        <Form>
+        <Form className='container'>
         <Space  size={20} style={{paddingTop:50,display:'flex',justifyContent:'center'}} >
    
         <p>Name</p>         
@@ -199,7 +199,7 @@ const fetchData =async() => {
       </Form.Item>
       </Space>
       <Form.Item style={{display:'flex',justifyContent:'center'}}>
-      <Button   type="primary"   onClick={(e)=>{ handleSave(e) }} > Add a Hospital</Button>
+      <Button   type="primary"   onClick={(e)=>{ handleSave(e) }} > Add a Pharmacy</Button>
       
      </Form.Item>
       
