@@ -1,8 +1,6 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 
-import 'dashbord.dart';
-
 class TrakOrder extends StatefulWidget {
   const TrakOrder({super.key});
 
@@ -21,7 +19,7 @@ class _TrakOrderState extends State<TrakOrder> {
     return Scaffold(
         appBar: AppBar(
           title: const Text(
-            "Trak your order",
+            "Track your order",
           ),
         ),
         body: Row(
@@ -32,57 +30,13 @@ class _TrakOrderState extends State<TrakOrder> {
               children: [
                 Container(
                   height: 120,
-                  width: 120,
+                  width: 350,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.black,
-                      style: BorderStyle.solid,
-                      width: 3.0,
+                      color: const Color.fromARGB(255, 251, 248, 248),
                     ),
                     image: const DecorationImage(
-                      image: AssetImage('images/processingDel.jpg'),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 120,
-                  width: 120,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                      style: BorderStyle.solid,
-                      width: 3.0,
-                    ),
-                    image: const DecorationImage(
-                      image: AssetImage('images/pac.jpg'),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 120,
-                  width: 120,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                      style: BorderStyle.solid,
-                      width: 3.0,
-                    ),
-                    image: const DecorationImage(
-                      image: AssetImage('images/comming.jpg'),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 120,
-                  width: 120,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                      style: BorderStyle.solid,
-                      width: 3.0,
-                    ),
-                    image: const DecorationImage(
-                      image: AssetImage('images/doorstep.jpg'),
+                      image: AssetImage('images/Group 50.png'),
                     ),
                   ),
                 ),

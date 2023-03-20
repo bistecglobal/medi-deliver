@@ -114,7 +114,7 @@ class _QuestionsState extends State<Questions> {
             controller: _userNameController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
-              hintText: " Your name",
+              hintText: "Enter your name",
             ),
           ),
         ),
@@ -125,7 +125,8 @@ class _QuestionsState extends State<Questions> {
             controller: _userPhoneController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
-              hintText: " Phone",
+              // labelText: 'Phone123',
+              hintText: "Enter your mobile number",
             ),
           ),
         ),
@@ -136,7 +137,7 @@ class _QuestionsState extends State<Questions> {
             controller: _userEmailController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
-              hintText: " Email",
+              hintText: "Enter your email",
             ),
           ),
         ),
@@ -147,7 +148,7 @@ class _QuestionsState extends State<Questions> {
             controller: _userAddressController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
-              hintText: " Address",
+              hintText: "Enter your address",
             ),
           ),
         ),

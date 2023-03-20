@@ -50,7 +50,7 @@ namespace Medi_Deliver
          
 
 
-            response.WriteString("Get Medical Centers");
+            
 
             return response;
         }

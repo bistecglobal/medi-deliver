@@ -1,38 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
 import 'package:flutter/material.dart';
 import 'dashbord.dart';
 
-Future<Album> fetchAlbum() async {
-  final response = await http
-      .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/6'));
-
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    return Album.fromJson(jsonDecode(response.body));
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load album');
-  }
-}
-
 class Album {
-  final String password;
-  final String username;
+  final String UserName;
+  final String Password;
 
-  const Album({
-    required this.password,
-    required this.username,
-  });
+  const Album({required this.UserName, required this.Password});
 
   factory Album.fromJson(Map<String, dynamic> json) {
     return Album(
-      password: json['password'],
-      username: json['username'],
+      UserName: json['UserName'],
+      Password: json['Password'],
     );
   }
 }
@@ -47,38 +28,34 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
-  late Future<Album> futureAlbum;
+  Future login(String username, String password) async {
+    final response = await http.post(
+      Uri.parse('https://medi.bto.bistecglobal.com/api/Function1'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'UserName': username,
+        'Password': password,
+      }),
+    );
 
-  @override
-  void initState() {
-    super.initState();
-    futureAlbum = fetchAlbum();
+    if (response.statusCode == 200) {
+      print("It's working login API");
+      return _DashBoard();
+    } else {
+      throw Exception('Failed to create album.');
+    }
   }
 
   final _userIdController = TextEditingController();
   final _userPassController = TextEditingController();
 
+  var futureAlbum;
+
   // ignore: non_constant_identifier_names
   void _DashBoard() {
     Navigator.pushNamed(context, '/dashboard');
-  }
-
-  void _handleSignInButtonPress() {
-    // ignore: avoid_print
-    print("_userIdController");
-
-    // var userId = futureAlbum.then((album) => album.username);
-    // var password = futureAlbum.then((album) => album.password);
-
-    var userId = "abc";
-    var password = "123";
-
-    // ignore: unrelated_type_equality_checks
-    if (userId == _userIdController.text &&
-        // ignore: unrelated_type_equality_checks
-        password == _userPassController.text) {
-      return _DashBoard();
-    }
   }
 
   @override
@@ -116,7 +93,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   ),
                   const SizedBox(height: 10.0),
                   const Text(
-                    "Login in to your account",
+                    "Log in to your account",
                     style: TextStyle(
                         color: Color.fromARGB(255, 28, 146, 243),
                         fontSize: 15.0),
@@ -171,7 +148,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                       color: const Color(0xFF2196F3),
                     ),
                     child: TextButton(
-                      onPressed: _handleSignInButtonPress,
+                      onPressed: () {
+                        login(_userIdController.text, _userPassController.text);
+                      },
                       child: const Text(
                         'Sign In',
                         style: TextStyle(
@@ -187,7 +166,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        Text("Don't have an accountant?"),
+                        Text("Don't have an account?"),
                         SizedBox(
                           width: 10,
                         ),

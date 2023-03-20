@@ -3,6 +3,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import 'questions.dart';
 
+//  <uses-permission android:name="android.permission.INTERNET" />
 class Booking extends StatefulWidget {
   const Booking({super.key});
 
@@ -44,7 +45,7 @@ class _BookingState extends State<Booking> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Delivery Shedule"),
+        title: const Text("Delivery Schedule"),
       ),
       body: Column(
         children: [
