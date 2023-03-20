@@ -213,7 +213,7 @@ const [dataSource, setDataSource] = useState([
   };
 
   console.log("abc",data)
-  const url ='http://localhost:7117/api/SaveOrders';
+  const url =`${process.env.NEXT_PUBLIC_BASE_URL}api/SaveOrders`;
   axios.post(url,data).then((result)=>{
   
      alert(result.data)
@@ -229,7 +229,7 @@ const [dataSource, setDataSource] = useState([
   formData.append("Image",imageUrl);
   formData.append("Name","Nalin");
 
-  const url2 ='http://localhost:7117/api/FileUpload';
+  const url2 =`${process.env.NEXT_PUBLIC_BASE_URL}api/FileUpload`;
   // axios.post(url2,data2).then((result)=>{
   //   alert(result.data)
   // }).catch((error)=>{
@@ -257,7 +257,7 @@ useEffect(()=>{
 
 const getData =async(page:number) =>{
   setLoadingg(true)
-  const result = await  axios.get('http://localhost:7117/api/GetOrder?pageSize=10&PageNumber=1');
+  const result = await  axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/GetOrder?pageSize=10&PageNumber=1`);
   console.log(result.data)
   setDataSource(result.data)
   
@@ -277,7 +277,7 @@ const getData =async(page:number) =>{
           // (student) => student.Id !== record.Id)
         });
         
-        axios.delete(`http://localhost:7117/api/Order/${record}`)
+        axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}api/Order/${record}`)
        
         
       },

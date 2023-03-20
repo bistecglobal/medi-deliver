@@ -132,7 +132,7 @@ const setLocationVal = (value:any) =>{
   };
 
   console.log("abc",data)
-  const url ='http://localhost:7117/api/SaveMedicalCenters';
+  const url =`${process.env.NEXT_PUBLIC_BASE_URL}api/SaveMedicalCenters`;
   axios.post(url,data).then((result)=>{
   
      alert(result.status)
@@ -147,7 +147,7 @@ useEffect(() => {
 }, []);
 
 const fetchData =async() => {
-  const result = await axios.get('http://localhost:7117/api/GetMedicalCenters?pageSize=10&PageNumber=1');
+  const result = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/GetMedicalCenters?pageSize=10&PageNumber=1`);
   
   setDataSource(result.data);
 }
@@ -174,7 +174,7 @@ const fetchData =async() => {
         setDataSource((pre) => {
           return pre.filter((patient) => patient.Id !== record);
         });
-        axios.delete(`http://localhost:7117/api/MedicalCenter/${record}`)
+        axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}api/MedicalCenter/${record}`)
       },
     });
   };
