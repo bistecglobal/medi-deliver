@@ -126,7 +126,7 @@ class _QuestionsState extends State<Questions> {
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               // labelText: 'Phone123',
-              hintText: "Enter your Phone",
+              hintText: "Enter your mobile number",
             ),
           ),
         ),
@@ -137,7 +137,7 @@ class _QuestionsState extends State<Questions> {
             controller: _userEmailController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
-              hintText: "Enter your Email",
+              hintText: "Enter your email",
             ),
           ),
         ),
@@ -148,7 +148,7 @@ class _QuestionsState extends State<Questions> {
             controller: _userAddressController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
-              hintText: "Enter your Address",
+              hintText: "Enter your address",
             ),
           ),
         ),

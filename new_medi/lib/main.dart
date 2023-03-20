@@ -9,6 +9,8 @@ import 'package:new_medi/camera_example_home.dart';
 import 'Upload.dart';
 import 'camera_app.dart';
 import 'dashbord.dart';
+import 'fetch.dart';
+import 'fetch1.dart';
 import 'login.dart';
 import 'questions.dart';
 import 'trakOrder.dart';
@@ -65,3 +67,6 @@ class _MyWidgetState extends State<MyWidget> {
     );
   }
 }
+
+// return MaterialPageRoute(builder: (_) => const MyApp());
+            // return MaterialPageRoute(builder: (_) => const DashBoard());

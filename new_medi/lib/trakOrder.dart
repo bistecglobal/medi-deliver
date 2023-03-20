@@ -19,7 +19,7 @@ class _TrakOrderState extends State<TrakOrder> {
     return Scaffold(
         appBar: AppBar(
           title: const Text(
-            "Trak your order",
+            "Track your order",
           ),
         ),
         body: Row(

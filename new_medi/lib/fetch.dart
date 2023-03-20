@@ -4,14 +4,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<Album> fetchAlbum() async {
-  final response = await http
-      .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/6'));
+Future<List<Album>> fetchAlbum() async {
+  final response = await http.get(Uri.parse(
+      'https://medi.bto.bistecglobal.com/api/GetMedicalCenters?pageNumber=1&pageSize=1'));
 
   if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    return Album.fromJson(jsonDecode(response.body));
+    final jsonResponse = jsonDecode(response.body);
+
+    // Map each object in the array to an instance of the Album class
+    final albums = jsonResponse.map((album) => Album.fromJson(album)).toList();
+    return albums;
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
@@ -20,21 +22,18 @@ Future<Album> fetchAlbum() async {
 }
 
 class Album {
-  final int userId;
-  final int id;
-  final String title;
+  final String m_Name;
+  final String m_Location;
 
   const Album({
-    required this.userId,
-    required this.id,
-    required this.title,
+    required this.m_Name,
+    required this.m_Location,
   });
 
   factory Album.fromJson(Map<String, dynamic> json) {
     return Album(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
+      m_Name: json['m_Name'],
+      m_Location: json['m_Location'],
     );
   }
 }
@@ -54,7 +53,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    futureAlbum = fetchAlbum();
+    futureAlbum = fetchAlbum() as Future<Album>;
   }
 
   @override
@@ -73,7 +72,7 @@ class _MyAppState extends State<MyApp> {
             future: futureAlbum,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data!.title);
+                return Text(snapshot.data!.m_Location);
               } else if (snapshot.hasError) {
                 return Text('${snapshot.error}');
               }

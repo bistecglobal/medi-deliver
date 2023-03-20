@@ -45,7 +45,7 @@ class _BookingState extends State<Booking> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Delivery Shedule"),
+        title: const Text("Delivery Schedule"),
       ),
       body: Column(
         children: [
