@@ -28,7 +28,7 @@ class MyLoginPage extends StatefulWidget {
 }
 
 class _MyLoginPageState extends State<MyLoginPage> {
-  Future createAlbum(String username, String password) async {
+  Future login(String username, String password) async {
     final response = await http.post(
       Uri.parse('https://medi.bto.bistecglobal.com/api/Function1'),
       headers: <String, String>{
@@ -149,8 +149,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     ),
                     child: TextButton(
                       onPressed: () {
-                        createAlbum(
-                            _userIdController.text, _userPassController.text);
+                        login(_userIdController.text, _userPassController.text);
                       },
                       child: const Text(
                         'Sign In',

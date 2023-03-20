@@ -1,7 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
-import 'Upload.dart';
-// import 'package:medi_deliver/Upload.dart';
+class Pharmacy {
+  final String M_Name;
+  final String M_Location;
+
+  const Pharmacy({
+    required this.M_Name,
+    required this.M_Location,
+  });
+
+  factory Pharmacy.fromJson(Map<String, dynamic> json) {
+    return Pharmacy(
+      M_Name: json['M_Name'],
+      M_Location: json['M_Location'],
+    );
+  }
+}
 
 class DashBoard extends StatefulWidget {
   const DashBoard({super.key});
@@ -11,6 +28,38 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
+  late String _mySelection;
+  List data = List.empty();
+
+  Future<List<Pharmacy>> Phamacies() async {
+    final response = await http.get(Uri.parse(
+        'https://medi.bto.bistecglobal.com/api/GetMedicalCenters?pageNumber=1&pageSize=10'));
+
+    if (response.statusCode == 200) {
+      final jsonResponse = jsonDecode(response.body);
+      print(response.body);
+      // Map each object in the array to an instance of the Album class
+      final List<Pharmacy> pharmacies =
+          jsonResponse.map((album) => Pharmacy.fromJson(album)).toList();
+      print(pharmacies);
+
+      setState(() {
+        items = pharmacies.map((e) => e.M_Name).toList();
+      });
+      return pharmacies;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Phamacies();
+  }
+
   String dropdownvalue = 'Kalaniya Pharmacy';
   var items = [
     'Kalaniya Pharmacy',
@@ -57,25 +106,26 @@ class _DashBoardState extends State<DashBoard> {
                       ),
                     ),
                     DropdownButton(
-                        value: dropdownvalue,
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Colors.black,
-                        ),
-                        items: items.map((String items) {
-                          return DropdownMenuItem(
-                            value: items,
-                            child: Text(
-                              items,
-                              style: const TextStyle(color: Colors.pink),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropdownvalue = newValue!;
-                          });
-                        }),
+                      value: dropdownvalue,
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.black,
+                      ),
+                      items: items.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text(
+                            items,
+                            style: const TextStyle(color: Colors.pink),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownvalue = newValue!;
+                        });
+                      },
+                    ),
                     DropdownButton<String>(
                       items: <String>['A', 'B', 'C', 'D'].map((String value) {
                         return DropdownMenuItem<String>(

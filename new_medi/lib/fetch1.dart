@@ -1,49 +1,61 @@
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import "package:flutter/material.dart";
+import 'dart:async';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-class FetchDataScreen extends StatefulWidget {
+class MyApp extends StatefulWidget {
   @override
-  _FetchDataScreenState createState() => _FetchDataScreenState();
+  _MyAppState createState() => _MyAppState();
 }
 
-class _FetchDataScreenState extends State<FetchDataScreen> {
-  List<dynamic> _data = [];
+class _MyAppState extends State<MyApp> {
+  late String _mySelection;
 
-  Future<List<dynamic>> _fetchData() async {
-    final response = await http.get(
-        Uri.parse('https://medi.bto.bistecglobal.com/api/GetMedicalCenters'));
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to fetch data');
-    }
+  final String url = "http://webmyls.com/php/getdata.php";
+
+  List data = []; //edited line
+
+  Future<String> getSWData() async {
+    var res = await http.get(Uri.encodeFull(url) as Uri,
+        headers: {"Accept": "application/json"});
+    var resBody = json.decode(res.body);
+
+    setState(() {
+      data = resBody;
+    });
+
+    print(resBody);
+
+    return "Sucess";
   }
 
   @override
   void initState() {
     super.initState();
-    _fetchData().then((data) {
-      setState(() {
-        _data = data;
-      });
-    });
+    this.getSWData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return new Scaffold(
       appBar: AppBar(
-        title: Text('Fetch Data Example'),
+        title: const Text("Hospital Management"),
       ),
-      body: ListView.builder(
-        itemCount: _data.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(_data[index]['title']),
-            subtitle: Text(_data[index]['body']),
-          );
-        },
+      body: new Center(
+        child: new DropdownButton(
+          items: data.map((item) {
+            return new DropdownMenuItem(
+              child: new Text(item['item_name']),
+              value: item['id'].toString(),
+            );
+          }).toList(),
+          onChanged: (newVal) {
+            setState(() {
+              _mySelection = newVal!;
+            });
+          },
+          value: _mySelection,
+        ),
       ),
     );
   }

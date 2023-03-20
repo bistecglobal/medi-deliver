@@ -1,16 +1,10 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
 import 'package:new_medi/calander.dart';
-import 'package:new_medi/takePicture.dart';
-import 'package:new_medi/camera_example_home.dart';
-
 import 'Upload.dart';
 import 'camera_app.dart';
 import 'dashbord.dart';
-import 'fetch.dart';
-import 'fetch1.dart';
 import 'login.dart';
 import 'questions.dart';
 import 'trakOrder.dart';
@@ -43,8 +37,8 @@ class _MyWidgetState extends State<MyWidget> {
         onGenerateRoute: (settings) {
           if (settings.name == '/') {
             return MaterialPageRoute(
-                builder: (_) => const MyLoginPage(
-                      title: 'chathura',
+                builder: (_) => const DashBoard(
+                    // title: 'chathura',
                     ));
           } else if (settings.name == '/dashboard') {
             return MaterialPageRoute(builder: (_) => const DashBoard());
@@ -67,6 +61,3 @@ class _MyWidgetState extends State<MyWidget> {
     );
   }
 }
-
-// return MaterialPageRoute(builder: (_) => const MyApp());
-            // return MaterialPageRoute(builder: (_) => const DashBoard());
