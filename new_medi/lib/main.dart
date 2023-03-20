@@ -1,19 +1,21 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+
 import 'package:new_medi/calander.dart';
+import 'package:new_medi/takePicture.dart';
+
 import 'Upload.dart';
-import 'camera_app.dart';
 import 'dashbord.dart';
 import 'login.dart';
 import 'questions.dart';
 import 'trakOrder.dart';
 
-List<CameraDescription> _cameras = [];
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  _cameras = await availableCameras();
-  runApp(MyWidget(cameras: _cameras));
+  final cameras = await availableCameras();
+  final firstCamera = cameras.first;
+  runApp(MyWidget(cameras: firstCamera));
 }
 
 class MyWidget extends StatefulWidget {
@@ -22,7 +24,7 @@ class MyWidget extends StatefulWidget {
   const MyWidget({super.key, this.cameras});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState(cameras: _cameras);
+  State<MyWidget> createState() => _MyWidgetState(cameras: cameras);
 }
 
 class _MyWidgetState extends State<MyWidget> {
@@ -37,8 +39,8 @@ class _MyWidgetState extends State<MyWidget> {
         onGenerateRoute: (settings) {
           if (settings.name == '/') {
             return MaterialPageRoute(
-                builder: (_) => const DashBoard(
-                    // title: 'chathura',
+                builder: (_) => const MyLoginPage(
+                      title: 'chathura',
                     ));
           } else if (settings.name == '/dashboard') {
             return MaterialPageRoute(builder: (_) => const DashBoard());
@@ -52,7 +54,10 @@ class _MyWidgetState extends State<MyWidget> {
             return MaterialPageRoute(builder: (_) => const TrakOrder());
           } else if (settings.name == '/cam') {
             return MaterialPageRoute(
-                builder: (_) => CameraApp(cameras: _cameras));
+                builder: (_) => TakePictureScreen(
+                      cameras.firstCamera,
+                      camera: cameras,
+                    ));
           } else {
             return null;
           }
