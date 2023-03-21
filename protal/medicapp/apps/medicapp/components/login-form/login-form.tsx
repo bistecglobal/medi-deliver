@@ -27,7 +27,7 @@ const handleSave =(e)=>{
     Password : passway
   };
 
-  const url =`${process.env.NEXT_PUBLIC_BASE_URL}api/Function1`;
+  const url ='http://localhost:7117/api/Function1';
   axios.post(url,data).then((result)=>{
       console.log(result)
       navigate.push('/home');

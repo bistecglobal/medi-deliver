@@ -28,22 +28,14 @@ const orders = () => {
   const [timevalue, settimevalue] = React.useState(false);
 
 
-//   const [data , setData2] =useState([{
-//     FirstName:firstval,
-//     StartDate: startdate,
-//     EmailAddress:addressval,
-//     Time: timeval,
-//     Status: statusval,
-//   }]);
 
-//   const setFirstNameVal = (value:any) =>{
-//     setfirstnameval(value);
-// };
 function setStartDate(startdate, dateString) {
     setDateS(dateString);
   }
   
- 
+  const setFirstNameVal = (value:any) =>{
+    setfirstnameval(value);
+};
 
   const setAddVal = (value:any) =>{
       setemailval(value);
@@ -58,12 +50,20 @@ const setSelectStatus = (value) =>{
     setselectstatus(value);
 };
 
-const setImageUrl = (info) => {
+const setImageUrl = async (info) => {
   if (info.file.status === "done") {
-    const url = URL.createObjectURL(info.file.originFileObj);
-    setimageurl(url);
+    // const url = URL.createObjectURL(info.file.originFileObj);
+    // console.log(info.file);
+    // setimageurl(url);
+    const file = info.file.originFileObj;
+    console.log(file);
+    // const blob = new Blob([file], { type: file.type });
+    setimageurl(file)
+    
   }
+  
 };
+
 
 const [dataSource, setDataSource] = useState([
   {
@@ -74,54 +74,7 @@ const [dataSource, setDataSource] = useState([
     Image:imageUrl,
     Status:statusval
   },
-
 ]);
-
-
-
-// const handleUpload = (info) => {
-//     if (info.file.status === 'uploading') {
-       
-//       setLoading(true);
-//       return;
-//     }
-//     if (info.file.status === 'done') {
-//       // Get the image URL and log it to the console
-//       setImageUrl(info.file.response.url);
-//       console.log(info.file.response.imageUrl);
-//       message.success(`${info.file.name} uploaded successfully`);
-//     }
-//     if (info.file.status === 'error') {
-//       setLoading(false);
-//       message.error('Error uploading image');
-//     }
-//   };
-
-//   const uploadButton = (
-//     <div>
-//       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-//       <div style={{ marginTop: 8 }}>Upload</div>
-//     </div>
-//   );
-
-// const uploadProps = {
-//     name: 'image',
-//     action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76', // replace with your upload URL
-//     showUploadList: false,
-//     onChange: handleUpload,
-//   };
-
-//   const renderUploadButton = () => (
-//     <div>
-//       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-//       <div style={{ marginTop: 8 }}>Upload</div>
-//     </div>
-//   );
-
-
-
-
- 
 
     const [isEditing, setIsEditing] = useState(false);
   const [editingPatient, setEditingPatient] = useState(null);
@@ -151,7 +104,8 @@ const [dataSource, setDataSource] = useState([
         key: "5",
         title: "Prescription",
         dataIndex: "Image",
-      },
+        
+    },
       {
         key: "6",
         title: "Status",
@@ -172,9 +126,10 @@ const [dataSource, setDataSource] = useState([
       
             <EditOutlined
               onClick={() => {
-                onEditPatient(record);
-              }}
+                onEditPatient(record) 
+              }}   
             />
+             
             <DeleteOutlined
               onClick={() => {
                 onDeletePatient(record.Id);
@@ -186,15 +141,24 @@ const [dataSource, setDataSource] = useState([
       },
     },
   ];
+
+  const onEditPatient = (record) => {
+    setIsEditing(true);
+    setEditingPatient({ ...record });
+  };
+  const resetEditing = () => {
+    setIsEditing(false);
+    setEditingPatient(null);
+  };
  
-  const handleSave =(e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
+  const handleSave = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
     e.preventDefault();
     const newPaient ={
       Id:firstval,
       Date: startdate,
       Time: timevalue,
       Address:addressval,
-      Image:imageUrl,
+      Image:imageUrl.name,
       Status:statusval
       
     }
@@ -202,53 +166,83 @@ const [dataSource, setDataSource] = useState([
     setDataSource(pre=> {
         return [...pre,newPaient];
       });
+
+
+      const formData = new FormData();
+      formData.append("Image", imageUrl, imageUrl.name);
+  
+      const response = await fetch("http://localhost:7117/api/FileUpload", {
+        method: "POST",
+        body: formData,
+      });
+     
+      if (response.ok) {
+        console.log("Image uploaded successfully!");
+        const data1 = await response.json();
+        setimageurl(data1.fileUrl);
+
+        const data ={
+          Date:startdate,
+          Time:timevalue,  
+          Address:addressval,
+          Image:data1.fileUrl,
+          Status:statusval
+         
+        };
+
+        console.log('Updated Data:', data);
+       
+        console.log("abc",data)
+        const url ='http://localhost:7117/api/SaveOrders';
+        axios.post(url,data).then((result)=>{
+        
+           alert(result.data)
+      
+        }).catch((error)=>{
+          alert(error);
+        });
+       
+        
+      } else {
+        console.log("Image upload failed.");
+      }
       
 //post data
-  const data ={
-    Date:startdate,
-    Time:timevalue,
-    Address:addressval,
-    Status:statusval
-   
-  };
-
-  console.log("abc",data)
-  const url =`${process.env.NEXT_PUBLIC_BASE_URL}api/SaveOrders`;
-  axios.post(url,data).then((result)=>{
-  
-     alert(result.data)
-
-  }).catch((error)=>{
-    alert(error);
-  });
+ 
 
   // const data2 ={
   //   Image:imageUrl,
   // }
-  const formData = new FormData();
-  formData.append("Image",imageUrl);
-  formData.append("Name","Nalin");
+  // const formData = new FormData();
+  // formData.append("Image",imageUrl);
+  // // formData.append("Name","Nalin");
 
-  const url2 =`${process.env.NEXT_PUBLIC_BASE_URL}api/FileUpload`;
-  // axios.post(url2,data2).then((result)=>{
-  //   alert(result.data)
-  // }).catch((error)=>{
-  //   alert(error);
-  // });
-  fetch(url2, {
-    method: 'POST',
-    body: formData
-  })
+  // const url2 ='http://localhost:7117/api/FileUpload';
+  // // axios.post(url2,data2).then((result)=>{
+  // //   alert(result.data)
+  // // }).catch((error)=>{
+  // //   alert(error);
+  // // });
+  // fetch(url2, {
+  //   method: 'POST',
+  //   body: formData
+  // })
     
-   .catch((error)=>{
-    alert(error)
-   })
+  //  .catch((error)=>{
+  //   alert(error)
+  //  })
+ 
+    
+ 
+
+    
     
 }
 
 
 const [totalPages, setTotalPages] =useState(1);
 const [loadingg, setLoadingg] =useState(false);
+const [results,setresult] = useState("")
 
 //get data
 useEffect(()=>{
@@ -257,13 +251,14 @@ useEffect(()=>{
 
 const getData =async(page:number) =>{
   setLoadingg(true)
-  const result = await  axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/GetOrder?pageSize=10&PageNumber=1`);
+  const result = await  axios.get('http://localhost:7117/api/GetOrder?pageSize=10&PageNumber=1');
   console.log(result.data)
   setDataSource(result.data)
   
   setTotalPages(10);
   setLoadingg(false);
  }
+ 
 
 
   const onDeletePatient = (record) => {
@@ -274,23 +269,38 @@ const getData =async(page:number) =>{
       onOk: () => {
         setDataSource((pre) => {
           return pre.filter( (student) => student.Id !== record);
-          // (student) => student.Id !== record.Id)
+         
         });
         
-        axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}api/Order/${record}`)
+        axios.delete(`http://localhost:7117/api/Order/${record}`)
        
         
       },
     });
   };
-  const onEditPatient = (record) => {
-    setIsEditing(true);
-    setEditingPatient({ ...record });
+
+  // async function updateOrder(orderId, updatedOrder) {
+  //   try {
+  //     const result = await axios.put(`http://localhost:7117/api/UpdateOrder/${orderId}`, updatedOrder);
+  //     console.log(result.data);
+  //     // TODO: Update the table data in the frontend.
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert('Failed to update the order.');
+  //   }
+  // }
+  const handleUpdateOrder = async (orderId, updatedOrder) => {
+    try {
+      const response = await axios.put(`http://localhost:7117/api/UpdateOrder/${orderId}`, updatedOrder);
+      console.log(response.data);
+      alert('Order updated successfully.');
+      // TODO: Update the table data in the frontend.
+    } catch (err) {
+      console.error(err);
+      alert('Failed to update the order.');
+    }
   };
-  const resetEditing = () => {
-    setIsEditing(false);
-    setEditingPatient(null);
-  };
+  
     return (
       <div >
         <div>
@@ -339,7 +349,7 @@ const getData =async(page:number) =>{
       
       <p>Upload Picture</p>
       <Form.Item>
-      <Upload.Dragger listType="picture" onChange={setImageUrl} >
+      <Upload.Dragger listType="picture" onChange={setImageUrl}  >
         Drag Files Or
         <br/>
         <Button>Click Upload</Button>
@@ -348,28 +358,7 @@ const getData =async(page:number) =>{
      
       </Form.Item>
       
-      {/* <Upload
-      name="avatar"
-      listType="picture-card"
-      className="avatar-uploader"
-      showUploadList={false}
-      action="/api/uploadImage"
-      onChange={handleUpload}
-    >
-      {imageUrl ? (
-        <img src={imageUrl} alt="avatar" style={{ width: '100%' }} />
-      ) : (
-        uploadButton
-      )}
-    </Upload> 
-    
-    <Upload {...uploadProps}>
-        {imageUrl ? (
-          <img src={imageUrl} alt="uploaded image" style={{ maxWidth: 200 }} />
-        ) : (
-          renderUploadButton()
-        )}
-      </Upload> */}
+      
       
       
       </Space>
@@ -402,7 +391,7 @@ const getData =async(page:number) =>{
         ></Table>
         <Modal
           title="Edit Patient"
-          visible={isEditing}
+          open={isEditing}
           okText="Save"
           onCancel={() => {
             resetEditing();
@@ -410,7 +399,9 @@ const getData =async(page:number) =>{
           onOk={() => {
             setDataSource((pre) => {
               return pre.map((patient) => {
-                if (patient.Id === editingPatient.id) {
+                console.log(patient.Id)
+                
+                if (patient.Id === editingPatient.Id) {
                   return editingPatient;
                 } else {
                   return patient;
@@ -464,7 +455,11 @@ const getData =async(page:number) =>{
 </Select>
           <p>Image of the Order</p>
           {/* <img src={"/medi.jpg"} alt="profiles" style={{position:"relative",top:"0",left:"30",right:"20"}}/> */}
-          {imageUrl && <img src={imageUrl} alt="uploaded"  style={{ width: '100%' }} />}
+          {/* {imageUrl && <img src={imageUrl} alt="uploaded"  style={{ width: '100%' }} />} */}
+         
+         <img src={getData[editingPatient]} alt="order" style={{ width: '100%' }} />
+        
+ 
         
         </Modal>
       </header>

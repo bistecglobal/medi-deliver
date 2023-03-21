@@ -47,7 +47,7 @@ export function DashBoard({ children }) {
             onClick: () => setCollapsed(!collapsed),
           })}
           </div>
-      <Typography.Title style={{color:'white',paddingRight:300}}>Medical Dashboard</Typography.Title>
+      <Typography.Title style={{color:'white',paddingRight:350}}>Medical Dashboard</Typography.Title>
       <Space>
         <Badge  dot>
           <MailOutlined

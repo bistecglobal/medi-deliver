@@ -120,6 +120,7 @@ const setLocationVal = (value:any) =>{
       M_Location:locationval,
       
     }
+    console.log(firstval);
     setDataSource(pre=>{
       return[...pre,manageLocation]
     });
@@ -132,7 +133,7 @@ const setLocationVal = (value:any) =>{
   };
 
   console.log("abc",data)
-  const url =`${process.env.NEXT_PUBLIC_BASE_URL}api/SaveMedicalCenters`;
+  const url ='http://localhost:7117/api/SaveMedicalCenters';
   axios.post(url,data).then((result)=>{
   
      alert(result.status)
@@ -147,7 +148,7 @@ useEffect(() => {
 }, []);
 
 const fetchData =async() => {
-  const result = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}api/GetMedicalCenters?pageSize=10&PageNumber=1`);
+  const result = await axios.get('http://localhost:7117/api/GetMedicalCenters?pageSize=10&PageNumber=1');
   
   setDataSource(result.data);
 }
@@ -163,6 +164,19 @@ const fetchData =async() => {
     console.log(updatedDataSource)
     setDataSource(updatedDataSource);
     setEditingRow(null);
+
+    //update data
+    const url = `http://localhost:7117/api/MedicalCenter/${editingRow}`;
+  const data = {
+    Id: editingRow,
+    M_Name: values.M_Name,
+    M_Location: values.M_Location,
+  };
+  axios.put(url, data).then((result) => {
+    alert(result.status);
+  }).catch((error) => {
+    alert(error);
+  });
   };
 
   const onDeletePatient = (record) => {
@@ -174,7 +188,7 @@ const fetchData =async() => {
         setDataSource((pre) => {
           return pre.filter((patient) => patient.Id !== record);
         });
-        axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}api/MedicalCenter/${record}`)
+        axios.delete(`http://localhost:7117/api/MedicalCenter/${record}`)
       },
     });
   };
