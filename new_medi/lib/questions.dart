@@ -5,35 +5,51 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future<Album> fetchAlbum() async {
-  final response = await http
-      .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/6'));
+Future<Patient> _savePatient(
+    String YourName, String Phone, String Email, String Address) async {
+  final response = await http.post(
+    Uri.parse('https://medi.bto.bistecglobal.com/api/SavePatient'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'YourName': YourName,
+      'Phone': Phone,
+      'Email': Email,
+      'Address': Address,
+    }),
+  );
 
   if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
+    print("hi hi it's working");
+    // If the server did return a 201 CREATED response,
     // then parse the JSON.
-    return Album.fromJson(jsonDecode(response.body));
+    return Patient.fromJson(jsonDecode(response.body));
   } else {
-    // If the server did not return a 200 OK response,
+    // If the server did not return a 201 CREATED response,
     // then throw an exception.
-    throw Exception('Failed to load album');
+    throw Exception('Failed to create album.');
   }
 }
 
-class Album {
-  final String password;
-  final String username;
+class Patient {
+  final String YourName;
+  final String Phone;
+  final String Email;
+  final String Address;
 
-  const Album({
-    required this.password,
-    required this.username,
-  });
+  const Patient(
+      {required this.YourName,
+      required this.Phone,
+      required this.Email,
+      required this.Address});
 
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return Album(
-      password: json['password'],
-      username: json['username'],
-    );
+  factory Patient.fromJson(Map<String, dynamic> json) {
+    return Patient(
+        YourName: json['YourName'],
+        Phone: json['Phone'],
+        Email: json['Email'],
+        Address: json['Address']);
   }
 }
 
@@ -53,20 +69,6 @@ class _QuestionsState extends State<Questions> {
       TextEditingController(text: null);
   final TextEditingController _userAddressController =
       TextEditingController(text: null);
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _userNameController.addListener(() {
-  //     final String text = _userNameController.text.toLowerCase();
-  //     _userNameController.value = _userNameController.value.copyWith(
-  //       text: text,
-  //       selection:
-  //           TextSelection(baseOffset: text.length, extentOffset: text.length),
-  //       composing: TextRange.empty,
-  //     );
-  //   });
-  // }
 
   void _trakOrder() {
     print(_userNameController);
@@ -167,7 +169,16 @@ class _QuestionsState extends State<Questions> {
                 color: const Color.fromARGB(255, 29, 121, 242),
               ),
               child: TextButton(
-                onPressed: _trakOrder,
+                onPressed: () {
+                  setState(() {
+                    _savePatient(
+                        _userNameController.text,
+                        _userPhoneController.text,
+                        _userEmailController.text,
+                        _userAddressController.text);
+                  });
+                },
+                //  _savePatient(_userNameController.text,_userPhoneController.text,_userEmailController.text,_userAddressController.text),
                 child: const Text(
                   "Submit",
                   style: TextStyle(
