@@ -5,33 +5,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future<Patient> _savePatient(
-    String YourName, String Phone, String Email, String Address) async {
-  final response = await http.post(
-    Uri.parse('https://medi.bto.bistecglobal.com/api/SavePatient'),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(<String, String>{
-      'YourName': YourName,
-      'Phone': Phone,
-      'Email': Email,
-      'Address': Address,
-    }),
-  );
-
-  if (response.statusCode == 200) {
-    print("hi hi it's working");
-    // If the server did return a 201 CREATED response,
-    // then parse the JSON.
-    return Patient.fromJson(jsonDecode(response.body));
-  } else {
-    // If the server did not return a 201 CREATED response,
-    // then throw an exception.
-    throw Exception('Failed to create album.');
-  }
-}
-
 class Patient {
   final String YourName;
   final String Phone;
@@ -95,6 +68,39 @@ class _QuestionsState extends State<Questions> {
 
   @override
   Widget build(BuildContext context) {
+    void _TrakOrder() {
+      Navigator.pushNamed(context, '/trakOrder');
+    }
+
+    Future<Patient> _savePatient(
+        String YourName, String Phone, String Email, String Address) async {
+      final response = await http.post(
+        Uri.parse('https://medi.bto.bistecglobal.com/api/SavePatient'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'YourName': YourName,
+          'Phone': Phone,
+          'Email': Email,
+          'Address': Address,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print("hi hi it's working");
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(context, '/trakOrder');
+        // If the server did return a 201 CREATED response,
+        // then parse the JSON.
+        return Patient.fromJson(jsonDecode(response.body));
+      } else {
+        // If the server did not return a 201 CREATED response,
+        // then throw an exception.
+        throw Exception('Failed to create album.');
+      }
+    }
+
     var userNameController = "hello";
     return Scaffold(
       appBar: AppBar(
