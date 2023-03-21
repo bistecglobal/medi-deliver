@@ -3,17 +3,21 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
+import 'Upload.dart';
+
 Future<List<Pharmacy>> getPhamacies() async {
   final response = await http.get(Uri.parse(
       'https://medi.bto.bistecglobal.com/api/GetMedicalCenters?pageNumber=1&pageSize=10'));
 
   if (response.statusCode == 200) {
     final jsonResponse = jsonDecode(response.body);
+    // ignore: avoid_print
     print(response.body);
     // Map each object in the array to an instance of the Album class
     final List<Pharmacy> pharmacies = jsonResponse
         .map<Pharmacy>((album) => Pharmacy.fromJson(album))
         .toList();
+    // ignore: avoid_print
     print(pharmacies);
 
     // setState(() {
@@ -29,11 +33,15 @@ Future<List<Pharmacy>> getPhamacies() async {
 }
 
 class Pharmacy {
+  // ignore: non_constant_identifier_names
   final String M_Name;
+  // ignore: non_constant_identifier_names
   final String M_Location;
 
   const Pharmacy({
+    // ignore: non_constant_identifier_names
     required this.M_Name,
+    // ignore: non_constant_identifier_names
     required this.M_Location,
   });
 
@@ -46,28 +54,38 @@ class Pharmacy {
 }
 
 class DashBoard extends StatefulWidget {
-  const DashBoard({super.key});
+  final String value;
+  const DashBoard({super.key, required this.value});
 
   @override
   State<DashBoard> createState() => _DashBoardState();
 }
 
 class _DashBoardState extends State<DashBoard> {
+  String myValue = '';
   late String _mySelection;
   List data = List.empty();
 
+  // ignore: prefer_typing_uninitialized_variables
   var dropdownvalue;
 
   @override
   void initState() {
     super.initState();
+    myValue = widget.value;
   }
 
   final items = getPhamacies();
 
   // ignore: non_constant_identifier_names
   void _Upload() {
-    Navigator.pushNamed(context, '/upload');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Upload(location: dropdownvalue.M_Name)),
+    );
+
+    // Navigator.pushNamed(context, '/upload');
   }
 
   @override
@@ -79,7 +97,7 @@ class _DashBoardState extends State<DashBoard> {
             return MaterialApp(
               home: Scaffold(
                 appBar: AppBar(
-                  title: const Text("Chathuranga Jayanath"),
+                  title: Text(myValue),
                   actions: <Widget>[
                     IconButton(
                       onPressed: () {
@@ -126,16 +144,6 @@ class _DashBoardState extends State<DashBoard> {
                                   dropdownvalue = newValue!;
                                 });
                               },
-                            ),
-                            DropdownButton<String>(
-                              items: <String>['A', 'B', 'C', 'D']
-                                  .map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
-                              onChanged: (_) {},
                             ),
                           ],
                         ),
@@ -323,7 +331,7 @@ class _DashBoardState extends State<DashBoard> {
               ),
             );
           } else {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
         });
   }

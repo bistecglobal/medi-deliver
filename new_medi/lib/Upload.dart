@@ -1,16 +1,31 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 
+import 'calander.dart';
+
 class Upload extends StatefulWidget {
-  const Upload({super.key});
+  // const Upload({super.key});
+  final String location;
+  const Upload({super.key, required this.location});
 
   @override
   State<Upload> createState() => _UploadState();
 }
 
 class _UploadState extends State<Upload> {
+  String place = '';
+  @override
+  void initState() {
+    super.initState();
+    place = widget.location;
+  }
+
   void _booking() {
-    Navigator.pushNamed(context, '/booking');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Booking(location: place)),
+    );
+    // Navigator.pushNamed(context, '/booking');
   }
 
   void _cam() {

@@ -1,13 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:io';
-
-import 'package:new_medi/calander.dart';
 import 'package:new_medi/takePicture.dart';
-
-import 'Upload.dart';
-import 'dashbord.dart';
 import 'login.dart';
 import 'questions.dart';
 import 'trakOrder.dart';
@@ -43,14 +37,20 @@ class _MyWidgetState extends State<MyWidget> {
                 builder: (_) => const MyLoginPage(
                       title: 'chathura',
                     ));
-          } else if (settings.name == '/dashboard') {
-            return MaterialPageRoute(builder: (_) => const DashBoard());
-          } else if (settings.name == '/upload') {
-            return MaterialPageRoute(builder: (_) => const Upload());
-          } else if (settings.name == '/questions') {
+          }
+          //  else if (settings.name == '/dashboard') {
+          //   return MaterialPageRoute(
+          //       builder: (_) =>  DashBoard(
+          //             value:_userIdController.text,
+          //           ));
+          // }
+          // else if (settings.name == '/upload') {
+          //   return MaterialPageRoute(builder: (_) => const Upload());
+          // }
+          else if (settings.name == '/questions') {
             return MaterialPageRoute(builder: (_) => const Questions());
-          } else if (settings.name == '/booking') {
-            return MaterialPageRoute(builder: (_) => const Booking());
+            // } else if (settings.name == '/booking') {
+            //   return MaterialPageRoute(builder: (_) => const Booking());
           } else if (settings.name == '/trakOrder') {
             return MaterialPageRoute(builder: (_) => const TrakOrder());
           } else if (settings.name == '/cam') {

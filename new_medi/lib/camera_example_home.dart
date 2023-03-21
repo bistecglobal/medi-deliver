@@ -146,6 +146,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
   Future onTakePictureButtonPressed() async {
     print("+++++1");
     final picture = await takePicture();
+    // ignore: prefer_interpolation_to_compose_strings
     print("PICTURE!!!!!: " + picture.toString());
     if (picture != null) {
       print('🎃🎃🎃🎃🎃🎃🎃 Picture saved to ${picture.path}');
@@ -167,6 +168,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
       final XFile file = await cameraController.takePicture();
       return file;
     } on CameraException catch (e) {
+      // ignore: prefer_interpolation_to_compose_strings
       print("CAMERA ERROR: " + e.toString());
       return null;
     }

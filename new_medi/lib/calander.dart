@@ -6,12 +6,18 @@ import 'dart:async';
 import 'dart:convert';
 
 class TimeSlot {
+  // ignore: non_constant_identifier_names
   final String Title;
+  // ignore: non_constant_identifier_names
   final String Selection;
+  // ignore: non_constant_identifier_names
   final DateTime Time;
 
   const TimeSlot(
-      {required this.Title, required this.Selection, required this.Time});
+      // ignore: non_constant_identifier_names
+      {required this.Title,
+      required this.Selection,
+      required this.Time});
 
   factory TimeSlot.fromJson(Map<String, dynamic> json) {
     return TimeSlot(
@@ -24,7 +30,8 @@ class TimeSlot {
 
 //  <uses-permission android:name="android.permission.INTERNET" />
 class Booking extends StatefulWidget {
-  const Booking({super.key});
+  final String location;
+  const Booking({super.key, required this.location});
 
   @override
   State<Booking> createState() => _BookingState();
@@ -32,7 +39,10 @@ class Booking extends StatefulWidget {
 
 class _BookingState extends State<Booking> {
   Future<TimeSlot> _setTime(
-      String Title, String Selection, DateTime Time) async {
+      // ignore: non_constant_identifier_names
+      String Title,
+      String Selection,
+      DateTime Time) async {
     final response = await http.post(
       Uri.parse('https://medi.bto.bistecglobal.com/api/SaveTimeSlot'),
       headers: <String, String>{
@@ -46,6 +56,7 @@ class _BookingState extends State<Booking> {
     );
 
     if (response.statusCode == 200) {
+      // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, '/questions');
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
@@ -55,6 +66,13 @@ class _BookingState extends State<Booking> {
       // then throw an exception.
       throw Exception('Failed to create album.');
     }
+  }
+
+  String place = '';
+  @override
+  void initState() {
+    super.initState();
+    place = widget.location;
   }
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -272,8 +290,7 @@ class _BookingState extends State<Booking> {
                       child: TextButton(
                         onPressed: () {
                           setState(() {
-                            _setTime(
-                                dropdownvalue1, dropdownvalue1, _focusedDay);
+                            _setTime(place, dropdownvalue1, _focusedDay);
                           });
                         },
 
