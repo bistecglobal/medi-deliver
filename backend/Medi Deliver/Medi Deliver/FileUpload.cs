@@ -46,7 +46,7 @@ namespace Medi_Deliver
             Stream content = file.Data;
 
             var parmacyName = parser.GetParameterValue("ParmacyName");
-            var imagePath = $"{parmacyName}/{filename}";
+            var imagePath = $"{parmacyName}{filename}";
 
             try
             {

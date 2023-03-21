@@ -11,6 +11,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import { TimePicker } from 'antd';
 import type { Dayjs } from 'dayjs';
 import axios from 'axios';
+import Image from 'next/image';
 
 
 
@@ -18,7 +19,7 @@ const orders = () => {
 
     
     const selectStatus =['Active',"Processing","Delivered","Canceled"]
-    const [firstval,setfirstnameval]= useState("");
+    const [firstval,setfirstnameval]= useState("1");
     const [startdate, setDateS] = React.useState(false);
     const [imageUrl, setimageurl] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -63,6 +64,9 @@ const setImageUrl = async (info) => {
   }
   
 };
+const [isEditing, setIsEditing] = useState(false);
+const [editingPatient, setEditingPatient] = useState(null);
+
 
 
 const [dataSource, setDataSource] = useState([
@@ -76,9 +80,7 @@ const [dataSource, setDataSource] = useState([
   },
 ]);
 
-    const [isEditing, setIsEditing] = useState(false);
-  const [editingPatient, setEditingPatient] = useState(null);
-  
+   
   const columns = [
     {
       key: "1",
@@ -123,8 +125,9 @@ const [dataSource, setDataSource] = useState([
       render: (record) => {
         return (
           <>
-      
+
             <EditOutlined
+          
               onClick={() => {
                 onEditPatient(record) 
               }}   
@@ -136,37 +139,18 @@ const [dataSource, setDataSource] = useState([
               }}
               style={{ color: "red", marginLeft: 12 }}
             />
+        
           </>
         );
       },
     },
   ];
 
-  const onEditPatient = (record) => {
-    setIsEditing(true);
-    setEditingPatient({ ...record });
-  };
-  const resetEditing = () => {
-    setIsEditing(false);
-    setEditingPatient(null);
-  };
+  
  
   const handleSave = async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
     e.preventDefault();
-    const newPaient ={
-      Id:firstval,
-      Date: startdate,
-      Time: timevalue,
-      Address:addressval,
-      Image:imageUrl.name,
-      Status:statusval
-      
-    }
    
-    setDataSource(pre=> {
-        return [...pre,newPaient];
-      });
-
 
       const formData = new FormData();
       formData.append("Image", imageUrl, imageUrl.name);
@@ -206,7 +190,20 @@ const [dataSource, setDataSource] = useState([
       } else {
         console.log("Image upload failed.");
       }
-      
+      const newPaient ={
+        Id:firstval,
+        Date: startdate,
+        Time: timevalue,
+        Address:addressval,
+        Image:imageUrl.name,
+        Status:statusval
+        
+      }
+     
+      setDataSource(pre=> {
+          return [...pre,newPaient];
+        });
+   
 //post data
  
 
@@ -289,26 +286,56 @@ const getData =async(page:number) =>{
   //     alert('Failed to update the order.');
   //   }
   // }
-  const handleUpdateOrder = async (orderId, updatedOrder) => {
-    try {
-      const response = await axios.put(`http://localhost:7117/api/UpdateOrder/${orderId}`, updatedOrder);
-      console.log(response.data);
-      alert('Order updated successfully.');
-      // TODO: Update the table data in the frontend.
-    } catch (err) {
-      console.error(err);
-      alert('Failed to update the order.');
-    }
+  // const handleUpdateOrder = async (orderId, updatedOrder) => {
+  //   try {
+  //     const response = await axios.put(`http://localhost:7117/api/UpdateOrder/${orderId}`, updatedOrder);
+  //     console.log(response.data);
+  //     alert('Order updated successfully.');
+  //     // TODO: Update the table data in the frontend.
+  //   } catch (err) {
+  //     console.error(err);
+  //     alert('Failed to update the order.');
+  //   }
+  // };
+
+  const onEditPatient = (record) => {
+    setIsEditing(true);
+    setEditingPatient({ ...record });
+
+    
   };
-  
+
+  const resetEditing = (record) => {
+    setIsEditing(false);
+    setEditingPatient(null);
+
+    const url = `http://localhost:7117/api/Order/${record.Id}`;
+  const data = {
+          Date:record.Date,
+          Time:record.Time,  
+          Address:record.Address,
+          Status:record.Status,
+          Image:record.Image,
+  };
+  console.log(data);
+  axios.put(url, data).then((result) => {
+    alert(result.status);
+  }).catch((error) => {
+    alert(error);
+    console.log("hello");
+  });
+  };
+
+ 
     return (
       <div >
         <div>
+        <Form.Item>
+   <h1 style={{fontWeight:'bold',paddingTop:30,fontSize:30, paddingLeft:100,}}>Manage Orders</h1>
+  </Form.Item>
     <Form  className='container'>
      
-    <Form.Item>
-   <h1 style={{fontWeight:'bold',paddingTop:30,fontSize:20, paddingLeft:20}}>Manage Orders</h1>
-  </Form.Item>
+    
   <div style={{ paddingLeft:100}}>
  
      <Space align="center" size={20} style={{paddingTop:20}}>
@@ -389,17 +416,21 @@ const getData =async(page:number) =>{
           }
          }} 
         ></Table>
+        <Form>
         <Modal
           title="Edit Patient"
           open={isEditing}
           okText="Save"
           onCancel={() => {
-            resetEditing();
+            resetEditing(editingPatient);
+            
+          
           }}
           onOk={() => {
+           
             setDataSource((pre) => {
-              return pre.map((patient) => {
-                console.log(patient.Id)
+              return pre.map(patient => {
+                
                 
                 if (patient.Id === editingPatient.Id) {
                   return editingPatient;
@@ -408,60 +439,63 @@ const getData =async(page:number) =>{
                 }
               });
             });
-            resetEditing();
+            resetEditing(editingPatient);
           }}
         >
+          
           <p>Date of Order</p>
           <DatePicker
+               
               onChange={(date, dateString) =>
-                setEditingPatient({ ...editingPatient, date: dateString })
+                setEditingPatient({ ...editingPatient, Date: dateString })
               }
               
             />
           <p>Order Time </p>
           <Input
-            value={editingPatient?.time}
+            value={editingPatient?.Time}
             onChange={(e) => {
               setEditingPatient((pre) => {
-                return { ...pre, time: e.target.value };
+                return { ...pre, Time: e.target.value };
               });
             }}
           />
           <p>Address Of the Patient</p>
           <Input
-            value={editingPatient?.address}
+            value={editingPatient?.Address}
             onChange={(e) => {
               setEditingPatient((pre) => {
-                return { ...pre, address: e.target.value };
+                return { ...pre, Address: e.target.value };
               });
             }}
           />
           <p>Status Of the Order</p>
          <Select
-          value={editingPatient?.status}
-          onChange={(status) => {
+          value={editingPatient?.Status}
+          onChange={(Status) => {
             setEditingPatient((pre) => ({
-              ...pre, status
+              ...pre, Status
             }));
           }}
 >
-  {selectStatus.map((status) => {
+  {selectStatus.map((Status) => {
     return (
-      <Select.Option key={status} value={status}>
-        {status}
+      <Select.Option key={Status} value={Status}>
+        {Status}
       </Select.Option>
     );
   })}
 </Select>
           <p>Image of the Order</p>
-          {/* <img src={"/medi.jpg"} alt="profiles" style={{position:"relative",top:"0",left:"30",right:"20"}}/> */}
-          {/* {imageUrl && <img src={imageUrl} alt="uploaded"  style={{ width: '100%' }} />} */}
          
-         <img src={getData[editingPatient]} alt="order" style={{ width: '100%' }} />
+          {editingPatient && <img src={editingPatient.Image} alt="order" style={{ width: '100%' }} />}
+         
+         {/* <img src={getData[editingPatient]} alt="order" style={{ width: '100%' }} /> */}
         
  
-        
+         
         </Modal>
+        </Form>
       </header>
       </div>
        

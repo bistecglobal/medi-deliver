@@ -4,8 +4,11 @@
   font-weight: 500; 
   font-size: 16px;
   line-height: 19px;
-  text-transform: capitalize;
+  /* text-transform: capitalize; */
   color: #A2A2BF;;
+  display: flex;
+  justify-content: center;
+  padding-right: 50px;
 }
 
 .ant-table{

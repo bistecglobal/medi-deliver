@@ -31,7 +31,7 @@ namespace Medi_Deliver
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(created);
             
-            response.WriteString("Welcome to Azure Functions!");
+          
 
             return response;
         }

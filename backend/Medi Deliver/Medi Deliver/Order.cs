@@ -11,7 +11,7 @@ namespace Medi_Deliver
 {
     public  class Order:Item
     {
-        //public string Id { get; set; }
+       
         public DateTime Date { get; set; }
         public TimeOnly Time { get; set; }
 
