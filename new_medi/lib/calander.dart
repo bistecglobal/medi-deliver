@@ -1,7 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-
+import 'package:http/http.dart' as http;
 import 'questions.dart';
+import 'dart:async';
+import 'dart:convert';
+
+class TimeSlot {
+  final String Title;
+  final String Selection;
+  final DateTime Time;
+
+  const TimeSlot(
+      {required this.Title, required this.Selection, required this.Time});
+
+  factory TimeSlot.fromJson(Map<String, dynamic> json) {
+    return TimeSlot(
+      Title: json['Title'],
+      Selection: json['Selection'],
+      Time: DateTime.parse(json['Time']),
+    );
+  }
+}
 
 //  <uses-permission android:name="android.permission.INTERNET" />
 class Booking extends StatefulWidget {
@@ -12,6 +31,32 @@ class Booking extends StatefulWidget {
 }
 
 class _BookingState extends State<Booking> {
+  Future<TimeSlot> _setTime(
+      String Title, String Selection, DateTime Time) async {
+    final response = await http.post(
+      Uri.parse('https://medi.bto.bistecglobal.com/api/SaveTimeSlot'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'Title': Title,
+        'Selection': Selection,
+        'Time': Time.toIso8601String(),
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Navigator.pushNamed(context, '/questions');
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      return TimeSlot.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to create album.');
+    }
+  }
+
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -26,21 +71,6 @@ class _BookingState extends State<Booking> {
     '07.00 p.m',
   ];
 
-  String dropdownvalue2 = '09.00 a.m';
-  var items2 = [
-    '09.00 a.m',
-    '11.00 a.m',
-    '12.00 a.m',
-    '03.00 p.m',
-    '05.00 p.m',
-    '07.00 p.m',
-  ];
-
-  // ignore: non_constant_identifier_names
-  void _question() {
-    Navigator.pushNamed(context, '/questions');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +80,7 @@ class _BookingState extends State<Booking> {
       body: Column(
         children: [
           Container(
-            height: 340,
+            height: 393,
             decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 201, 228, 250),
                 borderRadius: BorderRadius.only(
@@ -89,11 +119,12 @@ class _BookingState extends State<Booking> {
           ),
           Container(
             margin:
-                const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 10),
+                const EdgeInsets.only(top: 1, left: 20, right: 20, bottom: 1),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
                     const Text("Preffered Time Slots"),
@@ -125,7 +156,7 @@ class _BookingState extends State<Booking> {
                   ],
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 10),
+                  margin: const EdgeInsets.only(top: 1),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -175,7 +206,7 @@ class _BookingState extends State<Booking> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 10),
+                  margin: const EdgeInsets.only(top: 3),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -225,7 +256,7 @@ class _BookingState extends State<Booking> {
                   ),
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -239,7 +270,14 @@ class _BookingState extends State<Booking> {
                         color: const Color.fromARGB(255, 29, 121, 242),
                       ),
                       child: TextButton(
-                        onPressed: _question,
+                        onPressed: () {
+                          setState(() {
+                            _setTime(
+                                dropdownvalue1, dropdownvalue1, _focusedDay);
+                          });
+                        },
+
+                        //  _setTime(dropdownvalue2.,dropdownvalue1, _selectedDay),
                         child: const Text(
                           "Submit",
                           style: TextStyle(

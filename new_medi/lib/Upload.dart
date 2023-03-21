@@ -17,14 +17,6 @@ class _UploadState extends State<Upload> {
     Navigator.pushNamed(context, '/cam');
   }
 
-  // void _camera() {
-  //   Navigator.of(context).push(MaterialPageRoute(
-  //     builder: (_) {
-  //       return const MyCamera(camera: CameraDescription());
-  //     },
-  //   ));
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,12 +39,15 @@ class _UploadState extends State<Upload> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  onPressed: _cam,
-                  icon: const Icon(
-                    Icons.camera_alt_outlined,
-                    size: 80,
-                    color: Colors.blueAccent,
+                Container(
+                  padding: const EdgeInsets.only(right: 30),
+                  child: IconButton(
+                    onPressed: _cam,
+                    icon: const Icon(
+                      Icons.camera_alt_outlined,
+                      size: 80,
+                      color: Colors.blueAccent,
+                    ),
                   ),
                 ),
               ],

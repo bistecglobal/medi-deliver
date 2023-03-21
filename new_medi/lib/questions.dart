@@ -109,59 +109,69 @@ class _QuestionsState extends State<Questions> {
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Padding(padding: EdgeInsets.all(5)),
         Container(
-          margin: const EdgeInsets.all(20),
+          margin:
+              const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 5),
           child: const Text(
             "Let us know more about you",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
-          color: const Color.fromARGB(255, 232, 243, 249),
+          margin: const EdgeInsets.only(top: 5, left: 20, right: 30, bottom: 5),
+          color: const Color.fromARGB(255, 250, 250, 250),
           child: TextFormField(
             controller: _userNameController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               hintText: "Enter your name",
+              hintStyle: TextStyle(fontSize: 14.0),
             ),
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
-          color: const Color.fromARGB(255, 229, 244, 248),
+          margin: const EdgeInsets.only(top: 1, left: 20, right: 30, bottom: 5),
+          color: const Color.fromARGB(255, 250, 250, 250),
           child: TextFormField(
             controller: _userPhoneController,
+            keyboardType: TextInputType.number,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
+
               // labelText: 'Phone123',
               hintText: "Enter your mobile number",
+              hintStyle: TextStyle(fontSize: 14.0),
             ),
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
-          color: const Color.fromARGB(255, 213, 236, 241),
+          margin:
+              const EdgeInsets.only(top: 10, left: 20, right: 30, bottom: 5),
+          color: const Color.fromARGB(255, 250, 250, 250),
           child: TextFormField(
+            autovalidateMode: AutovalidateMode.always,
             controller: _userEmailController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               hintText: "Enter your email",
+              hintStyle: TextStyle(fontSize: 14.0),
             ),
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
-          color: const Color.fromARGB(255, 214, 230, 241),
+          margin:
+              const EdgeInsets.only(top: 10, left: 20, right: 30, bottom: 5),
+          color: const Color.fromARGB(255, 250, 250, 250),
           child: TextFormField(
             controller: _userAddressController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               hintText: "Enter your address",
+              hintStyle: TextStyle(fontSize: 14.0),
             ),
           ),
         ),
         const SizedBox(
-          height: 225.0,
+          height: 200.0,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
