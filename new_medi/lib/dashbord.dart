@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:new_medi/widgets/camera_lens_icon.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -331,7 +332,30 @@ class _DashBoardState extends State<DashBoard> {
               ),
             );
           } else {
-            return const CircularProgressIndicator();
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const CircularProgressIndicator.adaptive(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(
+                      "Connecting...",
+                      style: TextStyle(fontSize: 15.0, color: Colors.white),
+                    ),
+
+                    // const Text(
+                    //   "Loading...",
+                    //   style: TextStyle(fontSize: 15, color: Colors.white),
+                    // ),
+                  ],
+                ),
+              ],
+            );
           }
         });
   }
