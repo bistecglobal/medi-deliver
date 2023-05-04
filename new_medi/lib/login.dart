@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'dashbord.dart';
 
 class Album {
+  // ignore: non_constant_identifier_names
   final String UserName;
+  // ignore: non_constant_identifier_names
   final String Password;
 
+  // ignore: non_constant_identifier_names
   const Album({required this.UserName, required this.Password});
 
   factory Album.fromJson(Map<String, dynamic> json) {
@@ -41,21 +44,26 @@ class _MyLoginPageState extends State<MyLoginPage> {
     );
 
     if (response.statusCode == 200) {
-      print("It's working login API");
       return _DashBoard();
     } else {
       throw Exception('Failed to create album.');
     }
   }
 
-  final _userIdController = TextEditingController();
-  final _userPassController = TextEditingController();
+  final TextEditingController _userIdController = TextEditingController();
+  final TextEditingController _userPassController = TextEditingController();
 
+  // ignore: prefer_typing_uninitialized_variables
   var futureAlbum;
 
   // ignore: non_constant_identifier_names
   void _DashBoard() {
-    Navigator.pushNamed(context, '/dashboard');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => DashBoard(value: _userIdController.text)),
+    );
+    // Navigator.pushNamed(context, '/dashboard');
   }
 
   @override

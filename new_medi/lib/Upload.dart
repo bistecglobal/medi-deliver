@@ -1,29 +1,36 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 
+import 'calander.dart';
+
 class Upload extends StatefulWidget {
-  const Upload({super.key});
+  // const Upload({super.key});
+  final String location;
+  const Upload({super.key, required this.location});
 
   @override
   State<Upload> createState() => _UploadState();
 }
 
 class _UploadState extends State<Upload> {
+  String place = '';
+  @override
+  void initState() {
+    super.initState();
+    place = widget.location;
+  }
+
   void _booking() {
-    Navigator.pushNamed(context, '/booking');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Booking(location: place)),
+    );
+    // Navigator.pushNamed(context, '/booking');
   }
 
   void _cam() {
     Navigator.pushNamed(context, '/cam');
   }
-
-  // void _camera() {
-  //   Navigator.of(context).push(MaterialPageRoute(
-  //     builder: (_) {
-  //       return const MyCamera(camera: CameraDescription());
-  //     },
-  //   ));
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +54,15 @@ class _UploadState extends State<Upload> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(
-                  onPressed: _cam,
-                  icon: const Icon(
-                    Icons.camera_alt_outlined,
-                    size: 80,
-                    color: Colors.blueAccent,
+                Container(
+                  padding: const EdgeInsets.only(right: 30),
+                  child: IconButton(
+                    onPressed: _cam,
+                    icon: const Icon(
+                      Icons.camera_alt_outlined,
+                      size: 80,
+                      color: Colors.blueAccent,
+                    ),
                   ),
                 ),
               ],

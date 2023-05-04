@@ -5,35 +5,24 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-Future<Album> fetchAlbum() async {
-  final response = await http
-      .get(Uri.parse('https://jsonplaceholder.typicode.com/albums/6'));
+class Patient {
+  final String YourName;
+  final String Phone;
+  final String Email;
+  final String Address;
 
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    return Album.fromJson(jsonDecode(response.body));
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load album');
-  }
-}
+  const Patient(
+      {required this.YourName,
+      required this.Phone,
+      required this.Email,
+      required this.Address});
 
-class Album {
-  final String password;
-  final String username;
-
-  const Album({
-    required this.password,
-    required this.username,
-  });
-
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return Album(
-      password: json['password'],
-      username: json['username'],
-    );
+  factory Patient.fromJson(Map<String, dynamic> json) {
+    return Patient(
+        YourName: json['YourName'],
+        Phone: json['Phone'],
+        Email: json['Email'],
+        Address: json['Address']);
   }
 }
 
@@ -53,20 +42,6 @@ class _QuestionsState extends State<Questions> {
       TextEditingController(text: null);
   final TextEditingController _userAddressController =
       TextEditingController(text: null);
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _userNameController.addListener(() {
-  //     final String text = _userNameController.text.toLowerCase();
-  //     _userNameController.value = _userNameController.value.copyWith(
-  //       text: text,
-  //       selection:
-  //           TextSelection(baseOffset: text.length, extentOffset: text.length),
-  //       composing: TextRange.empty,
-  //     );
-  //   });
-  // }
 
   void _trakOrder() {
     print(_userNameController);
@@ -93,6 +68,39 @@ class _QuestionsState extends State<Questions> {
 
   @override
   Widget build(BuildContext context) {
+    void _TrakOrder() {
+      Navigator.pushNamed(context, '/trakOrder');
+    }
+
+    Future<Patient> _savePatient(
+        String YourName, String Phone, String Email, String Address) async {
+      final response = await http.post(
+        Uri.parse('https://medi.bto.bistecglobal.com/api/SavePatient'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'YourName': YourName,
+          'Phone': Phone,
+          'Email': Email,
+          'Address': Address,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print("hi hi it's working");
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(context, '/trakOrder');
+        // If the server did return a 201 CREATED response,
+        // then parse the JSON.
+        return Patient.fromJson(jsonDecode(response.body));
+      } else {
+        // If the server did not return a 201 CREATED response,
+        // then throw an exception.
+        throw Exception('Failed to create album.');
+      }
+    }
+
     var userNameController = "hello";
     return Scaffold(
       appBar: AppBar(
@@ -101,59 +109,69 @@ class _QuestionsState extends State<Questions> {
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Padding(padding: EdgeInsets.all(5)),
         Container(
-          margin: const EdgeInsets.all(20),
+          margin:
+              const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 5),
           child: const Text(
             "Let us know more about you",
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
-          color: const Color.fromARGB(255, 232, 243, 249),
+          margin: const EdgeInsets.only(top: 5, left: 20, right: 30, bottom: 5),
+          color: const Color.fromARGB(255, 250, 250, 250),
           child: TextFormField(
             controller: _userNameController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               hintText: "Enter your name",
+              hintStyle: TextStyle(fontSize: 14.0),
             ),
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
-          color: const Color.fromARGB(255, 229, 244, 248),
+          margin: const EdgeInsets.only(top: 1, left: 20, right: 30, bottom: 5),
+          color: const Color.fromARGB(255, 250, 250, 250),
           child: TextFormField(
             controller: _userPhoneController,
+            keyboardType: TextInputType.number,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
+
               // labelText: 'Phone123',
               hintText: "Enter your mobile number",
+              hintStyle: TextStyle(fontSize: 14.0),
             ),
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
-          color: const Color.fromARGB(255, 213, 236, 241),
+          margin:
+              const EdgeInsets.only(top: 10, left: 20, right: 30, bottom: 5),
+          color: const Color.fromARGB(255, 250, 250, 250),
           child: TextFormField(
+            autovalidateMode: AutovalidateMode.always,
             controller: _userEmailController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               hintText: "Enter your email",
+              hintStyle: TextStyle(fontSize: 14.0),
             ),
           ),
         ),
         Container(
-          margin: const EdgeInsets.only(top: 5, left: 20, right: 20, bottom: 5),
-          color: const Color.fromARGB(255, 214, 230, 241),
+          margin:
+              const EdgeInsets.only(top: 10, left: 20, right: 30, bottom: 5),
+          color: const Color.fromARGB(255, 250, 250, 250),
           child: TextFormField(
             controller: _userAddressController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               hintText: "Enter your address",
+              hintStyle: TextStyle(fontSize: 14.0),
             ),
           ),
         ),
         const SizedBox(
-          height: 225.0,
+          height: 200.0,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -167,7 +185,16 @@ class _QuestionsState extends State<Questions> {
                 color: const Color.fromARGB(255, 29, 121, 242),
               ),
               child: TextButton(
-                onPressed: _trakOrder,
+                onPressed: () {
+                  setState(() {
+                    _savePatient(
+                        _userNameController.text,
+                        _userPhoneController.text,
+                        _userEmailController.text,
+                        _userAddressController.text);
+                  });
+                },
+                //  _savePatient(_userNameController.text,_userPhoneController.text,_userEmailController.text,_userAddressController.text),
                 child: const Text(
                   "Submit",
                   style: TextStyle(

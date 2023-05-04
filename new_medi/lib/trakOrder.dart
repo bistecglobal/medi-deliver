@@ -1,4 +1,5 @@
 // ignore: file_names
+
 import 'package:flutter/material.dart';
 
 class TrakOrder extends StatefulWidget {
@@ -14,6 +15,10 @@ class _TrakOrderState extends State<TrakOrder> {
     Navigator.pushNamed(context, '/');
   }
 
+  String value = "1500.00";
+  String status = "on the way1";
+  String deliveredDate = "2023 / 03 / 20";
+  String orderID = "1198347";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,9 +27,8 @@ class _TrakOrderState extends State<TrakOrder> {
             "Track your order",
           ),
         ),
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+        body: ListView(
+          children: <Widget>[
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -40,6 +44,76 @@ class _TrakOrderState extends State<TrakOrder> {
                     ),
                   ),
                 ),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(status),
+                        Text("Total payable : $value "),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text("Order ID: $orderID"),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        const TextButton(
+                            onPressed: null, child: Text('View Order')),
+                      ],
+                    ),
+                  ],
+                ),
+                const Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const Padding(
+                        padding: (EdgeInsets.only(left: 30, top: 40))),
+                    const Text(
+                      "Past Orders",
+                    ),
+                  ],
+                ),
+                Container(
+                  height: 120,
+                  width: 350,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 251, 248, 248),
+                    ),
+                    image: const DecorationImage(
+                      image: AssetImage('images/Group 53.png'),
+                    ),
+                  ),
+                ),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        const Padding(padding: EdgeInsets.only(left: 35)),
+                        Text("Delivered on:$deliveredDate"),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text("Order ID: $orderID"),
+                        const SizedBox(
+                          width: 4,
+                        ),
+                        const TextButton(
+                            onPressed: null, child: Text('View Order')),
+                      ],
+                    ),
+                  ],
+                ),
+                const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

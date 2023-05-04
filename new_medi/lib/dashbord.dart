@@ -1,14 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:new_medi/widgets/camera_lens_icon.dart';
 import 'dart:async';
 import 'dart:convert';
 
+import 'Upload.dart';
+
+Future<List<Pharmacy>> getPhamacies() async {
+  final response = await http.get(Uri.parse(
+      'https://medi.bto.bistecglobal.com/api/GetMedicalCenters?pageNumber=1&pageSize=10'));
+
+  if (response.statusCode == 200) {
+    final jsonResponse = jsonDecode(response.body);
+    // ignore: avoid_print
+    print(response.body);
+    // Map each object in the array to an instance of the Album class
+    final List<Pharmacy> pharmacies = jsonResponse
+        .map<Pharmacy>((album) => Pharmacy.fromJson(album))
+        .toList();
+    // ignore: avoid_print
+    print(pharmacies);
+
+    // setState(() {
+    //   var items = pharmacies.map<String>((e) => e.M_Name).toList();
+    //   String dropdownvalue = items[0];
+    // });
+    return pharmacies;
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load album');
+  }
+}
+
 class Pharmacy {
+  // ignore: non_constant_identifier_names
   final String M_Name;
+  // ignore: non_constant_identifier_names
   final String M_Location;
 
   const Pharmacy({
+    // ignore: non_constant_identifier_names
     required this.M_Name,
+    // ignore: non_constant_identifier_names
     required this.M_Location,
   });
 
@@ -21,303 +55,308 @@ class Pharmacy {
 }
 
 class DashBoard extends StatefulWidget {
-  const DashBoard({super.key});
+  final String value;
+  const DashBoard({super.key, required this.value});
 
   @override
   State<DashBoard> createState() => _DashBoardState();
 }
 
 class _DashBoardState extends State<DashBoard> {
+  String myValue = '';
   late String _mySelection;
   List data = List.empty();
 
-  Future<List<Pharmacy>> Phamacies() async {
-    final response = await http.get(Uri.parse(
-        'https://medi.bto.bistecglobal.com/api/GetMedicalCenters?pageNumber=1&pageSize=10'));
-
-    if (response.statusCode == 200) {
-      final jsonResponse = jsonDecode(response.body);
-      print(response.body);
-      // Map each object in the array to an instance of the Album class
-      final List<Pharmacy> pharmacies =
-          jsonResponse.map((album) => Pharmacy.fromJson(album)).toList();
-      print(pharmacies);
-
-      setState(() {
-        items = pharmacies.map((e) => e.M_Name).toList();
-      });
-      return pharmacies;
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
-    }
-  }
+  // ignore: prefer_typing_uninitialized_variables
+  var dropdownvalue;
 
   @override
   void initState() {
     super.initState();
-    Phamacies();
+    myValue = widget.value;
   }
 
-  String dropdownvalue = 'Kalaniya Pharmacy';
-  var items = [
-    'Kalaniya Pharmacy',
-    'Chandana Pharmacy',
-    'Aruna Pharmacy',
-    'Nawaloka Pharmacy',
-    'Arogya Pharmacy',
-  ];
+  final items = getPhamacies();
 
   // ignore: non_constant_identifier_names
   void _Upload() {
-    Navigator.pushNamed(context, '/upload');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Upload(location: dropdownvalue.M_Name)),
+    );
+
+    // Navigator.pushNamed(context, '/upload');
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("Chathuranga Jayanath"),
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('This is a snackbar')));
-              },
-              icon: const Icon(Icons.add_a_photo),
-            )
-          ],
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              Container(
-                margin: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const Text(
-                      "Select Your Pharmacy :",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17.0,
-                      ),
-                    ),
-                    DropdownButton(
-                      value: dropdownvalue,
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Colors.black,
-                      ),
-                      items: items.map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Text(
-                            items,
-                            style: const TextStyle(color: Colors.pink),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownvalue = newValue!;
-                        });
+    return FutureBuilder(
+        future: items,
+        builder: (ctx, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return MaterialApp(
+              home: Scaffold(
+                appBar: AppBar(
+                  title: Text(myValue),
+                  actions: <Widget>[
+                    IconButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('This is a snackbar')));
                       },
-                    ),
-                    DropdownButton<String>(
-                      items: <String>['A', 'B', 'C', 'D'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (_) {},
-                    ),
+                      icon: const Icon(Icons.add_a_photo),
+                    )
                   ],
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(
-                    right: 20.0, left: 20.0, top: 1.0, bottom: 5.0),
-                padding: const EdgeInsets.all(20.0),
-                height: 185.0,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: const Color(0xFF2196F3),
-                ),
-                child: Column(children: [
-                  const Text(
-                    "Let's Find Your Doctor",
-                    style: TextStyle(
-                      fontSize: 35.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                body: Center(
+                  child: Column(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.white,
+                        margin: const EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            const Text(
+                              "Select Your Pharmacy :",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17.0,
+                              ),
+                            ),
+                            DropdownButton(
+                              value: dropdownvalue,
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.black,
+                              ),
+                              items: snapshot.data?.map((Pharmacy item) {
+                                return DropdownMenuItem(
+                                  value: item,
+                                  child: Text(
+                                    item.M_Name,
+                                    style: const TextStyle(color: Colors.pink),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (Object? newValue) {
+                                setState(() {
+                                  dropdownvalue = newValue!;
+                                });
+                              },
+                            ),
+                          ],
                         ),
-                        child: const Icon(Icons.heart_broken),
                       ),
                       Container(
-                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.only(
+                            right: 20.0, left: 20.0, top: 1.0, bottom: 5.0),
+                        padding: const EdgeInsets.all(20.0),
+                        height: 185.0,
+                        width: double.infinity,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: const Color(0xFF2196F3),
                         ),
-                        child: const Icon(Icons.home),
+                        child: Column(children: [
+                          const Text(
+                            "Let's Find Your Doctor",
+                            style: TextStyle(
+                              fontSize: 35.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 20.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.white,
+                                ),
+                                child: const Icon(Icons.heart_broken),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.white,
+                                ),
+                                child: const Icon(Icons.home),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.white,
+                                ),
+                                child: const Icon(
+                                    Icons.accessible_forward_outlined),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(50),
+                                  color: Colors.white,
+                                ),
+                                child: const Icon(Icons.bubble_chart),
+                              ),
+                            ],
+                          )
+                        ]),
                       ),
                       Container(
-                        padding: const EdgeInsets.all(5),
+                        alignment: Alignment.topLeft,
+                        margin: const EdgeInsets.only(
+                            left: 20, right: 20, top: 10, bottom: 10),
+                        padding: const EdgeInsets.all(20.0),
+                        height: 125,
+                        width: double.infinity,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: const Color(0xFF2196F3),
                         ),
-                        child: const Icon(Icons.accessible_forward_outlined),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                // ignore: prefer_const_literals_to_create_immutables
+                                children: [
+                                  const Text(
+                                    "Covid-19",
+                                    style: TextStyle(
+                                      fontSize: 25.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const Text(
+                                    "Vaccinations",
+                                    style: TextStyle(
+                                      fontSize: 25.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const Text(
+                                    "Let's Stay Safe & Vaccinations",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ]),
+                            const Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
                       ),
                       Container(
-                        padding: const EdgeInsets.all(5),
+                        alignment: Alignment.topLeft,
+                        margin: const EdgeInsets.only(
+                            top: 5, right: 20, left: 20, bottom: 10),
+                        padding: const EdgeInsets.all(20.0),
+                        height: 130,
+                        width: double.infinity,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          color: const Color(0xFF2196F3),
                         ),
-                        child: const Icon(Icons.bubble_chart),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                // ignore: prefer_const_literals_to_create_immutables
+                                children: [
+                                  const Text(
+                                    "Get Medicine",
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const Text(
+                                    "Delivered to Doorstep",
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const Text(
+                                    "Upload your prescription here",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ]),
+                            IconButton(
+                              onPressed: _Upload,
+                              icon: const Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
-                  )
-                ]),
-              ),
-              Container(
-                alignment: Alignment.topLeft,
-                margin: const EdgeInsets.only(
-                    left: 20, right: 20, top: 10, bottom: 10),
-                padding: const EdgeInsets.all(20.0),
-                height: 125,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: const Color(0xFF2196F3),
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        // ignore: prefer_const_literals_to_create_immutables
-                        children: [
-                          const Text(
-                            "Covid-19",
-                            style: TextStyle(
-                              fontSize: 25.0,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const Text(
-                            "Vaccinations",
-                            style: TextStyle(
-                              fontSize: 25.0,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const Text(
-                            "Let's Stay Safe & Vaccinations",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ]),
-                    const Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
+                bottomNavigationBar: BottomNavigationBar(
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home),
+                      label: 'Home',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.add_call),
+                      label: 'call',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.account_circle_rounded),
+                      label: 'call',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.date_range),
+                      label: 'date_range',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.image),
+                      label: 'image',
                     ),
                   ],
+                  selectedItemColor: const Color.fromARGB(255, 36, 131, 240),
+                  unselectedItemColor: const Color.fromARGB(255, 36, 131, 240),
                 ),
               ),
-              Container(
-                alignment: Alignment.topLeft,
-                margin: const EdgeInsets.only(
-                    top: 5, right: 20, left: 20, bottom: 10),
-                padding: const EdgeInsets.all(20.0),
-                height: 130,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: const Color(0xFF2196F3),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            );
+          } else {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        // ignore: prefer_const_literals_to_create_immutables
-                        children: [
-                          const Text(
-                            "Get Medicine",
-                            style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const Text(
-                            "Delivered to Doorstep",
-                            style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const Text(
-                            "Upload your prescription here",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ]),
-                    IconButton(
-                      onPressed: _Upload,
-                      icon: const Icon(
-                        Icons.arrow_forward,
-                        color: Colors.white,
-                      ),
+                    const CircularProgressIndicator.adaptive(),
+                    const SizedBox(
+                      height: 20,
                     ),
+                    const Text(
+                      "Connecting...",
+                      style: TextStyle(fontSize: 15.0, color: Colors.white),
+                    ),
+
+                    // const Text(
+                    //   "Loading...",
+                    //   style: TextStyle(fontSize: 15, color: Colors.white),
+                    // ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add_call),
-              label: 'call',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_rounded),
-              label: 'call',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.date_range),
-              label: 'date_range',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.image),
-              label: 'image',
-            ),
-          ],
-          selectedItemColor: const Color.fromARGB(255, 36, 131, 240),
-          unselectedItemColor: const Color.fromARGB(255, 36, 131, 240),
-        ),
-      ),
-    );
+              ],
+            );
+          }
+        });
   }
 }
