@@ -1,2 +1,1 @@
-# medi-deliver
-Medicine delivery app for pharmacies 
+# medi_care_application
