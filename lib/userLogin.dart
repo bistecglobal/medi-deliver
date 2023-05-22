@@ -90,8 +90,8 @@ class LoginPage extends ConsumerWidget {
   const LoginPage({Key? key, required String title}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, Widget ref) {
-    final bloc = ref.watch(loginProvider);
+  Widget build(BuildContext context, ScopedReader ref) {
+    final bloc = ref(loginProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),

@@ -5,12 +5,13 @@ import 'package:camera/camera.dart';
 
 final cameraProvider = Provider<CameraController>((ref) {
   final cameras = availableCameras();
-  return CameraController(cameras[0], ResolutionPreset.medium);
+  final camera = cameras[0];
+  return CameraController(camera, ResolutionPreset.medium, enableAudio: false);
 });
 
-final pictureCaptureProvider = Provider<PictureCaptureBloc>((ref) {
+final pictureCaptureProvider = Provider.autoDispose<PictureCaptureBloc>((ref) {
   final cameraController = ref.watch(cameraProvider);
-  throw Exception('Faild!');
+  return PictureCaptureBloc(cameraController);
 });
 
 class TakePictureScreen extends ConsumerWidget {
