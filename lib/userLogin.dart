@@ -18,8 +18,8 @@ class UserCredentials {
   }
 }
 
-final loginProvider = Provider.autoDispose(
-  (ref) => LoginBloc(ref.read),
+final loginProvider = Provider.autoDispose<LoginBloc>(
+  (ref) => LoginBloc(ref.container),
 );
 
 class LoginState {
@@ -35,7 +35,7 @@ class LoginState {
 }
 
 class LoginBloc {
-  final Reader read;
+  final ProviderContainer container;
 
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _userPassController = TextEditingController();
@@ -43,7 +43,7 @@ class LoginBloc {
   Stream<bool> get isLoadingStream => _isLoadingController.stream;
   final _loginStateController = StateController<LoginState>(LoginState());
 
-  LoginBloc(this.read) {
+  LoginBloc(this.container) {
     _isLoadingController = StreamController<bool>.broadcast();
   }
 
@@ -90,8 +90,8 @@ class LoginPage extends ConsumerWidget {
   const LoginPage({Key? key, required String title}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, ScopedReader ref) {
-    final bloc = ref(loginProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bloc = ref.watch(loginProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login'),

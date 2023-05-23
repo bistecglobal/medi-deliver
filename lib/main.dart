@@ -3,6 +3,7 @@ import 'package:camera/camera.dart';
 import 'package:medi_care_appliaction/details.dart';
 import 'package:medi_care_appliaction/takePicture.dart';
 import 'dart:async';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:medi_care_appliaction/trackOrder.dart';
 import 'package:medi_care_appliaction/userLogin.dart';
@@ -11,7 +12,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
   final firstCamera = cameras.first;
-  runApp(MyWidget(cameras: firstCamera));
+
+  runApp(ProviderScope(child: MyWidget(cameras: firstCamera)));
 }
 
 class MyWidget extends StatefulWidget {
@@ -35,7 +37,7 @@ class _MyWidgetState extends State<MyWidget> {
         onGenerateRoute: (settings) {
           if (settings.name == '/') {
             return MaterialPageRoute(
-                builder: (_) => LoginPage(
+                builder: (_) => const LoginPage(
                       title: 'Denidu',
                     ));
           } else if (settings.name == '/questions') {
@@ -49,6 +51,7 @@ class _MyWidgetState extends State<MyWidget> {
                 builder: (_) => TakePictureScreen(
                       cameras.firstCamera,
                       camera: cameras,
+                      key: UniqueKey(),
                     ));
           } else {
             return null;

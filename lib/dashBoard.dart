@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:medi_care_appliaction/booking.dart';
 
 class Pharmacy {
   final String mName;
@@ -61,7 +62,7 @@ class _DashBoardState extends State<DashBoard> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => Upload(location: dropdownValue!.mName)),
+            builder: (context) => Booking(location: dropdownValue!.mName)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -78,48 +79,49 @@ class _DashBoardState extends State<DashBoard> {
           if (snapshot.connectionState == ConnectionState.done) {
             final List<Pharmacy>? pharamacyList = snapshot.data;
 
-            if (pharamacyList != null && pharamacyList.isNotEmpty){
+            if (pharamacyList != null && pharamacyList.isNotEmpty) {
               return MaterialApp(
                 home: Scaffold(
                   appBar: AppBar(
                     title: Text(myValue),
                     actions: <Widget>[
                       IconButton(
-                        onPressed: (){
+                        onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('This is a snack Bar')),
+                            const SnackBar(
+                                content: Text('This is a snack Bar')),
                           );
                         },
                         icon: const Icon(Icons.add_a_photo),
-                        ),
-                    ],
-                    ),
-                    body: Center(
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.all(10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                const Text(
-                                  'Select Your Phamacy :',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17.0,
-                                  ),
-                                  ),
-                                
-                              ],
-                            ),
-                          )
-                        ],
                       ),
+                    ],
+                  ),
+                  body: Center(
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: const [
+                              Text(
+                                'Select Your Phamacy :',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
                   ),
-              )
+                ),
+              );
             }
           }
+          throw Exception('Faild');
         });
   }
 }

@@ -1,89 +1,114 @@
-import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-final cameraProvider = Provider<CameraController>((ref) {
-  final cameras = availableCameras();
-  final camera = cameras[0];
-  return CameraController(camera, ResolutionPreset.medium, enableAudio: false);
-});
+class TakePictureBloc extends Bloc<void, TakePictureState> {
+  final CameraController _controller;
 
-final pictureCaptureProvider = Provider.autoDispose<PictureCaptureBloc>((ref) {
-  final cameraController = ref.watch(cameraProvider);
-  return PictureCaptureBloc(cameraController);
-});
-
-class TakePictureScreen extends ConsumerWidget {
-  const TakePictureScreen(firstCamera, {Key? key, required camera})
-      : super(key: key);
+  TakePictureBloc(this._controller) : super(const TakePictureInitial());
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final cameraController = ref.watch(cameraProvider);
-    final bloc = ref.watch(pictureCaptureProvider);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Take a Picture'),
-      ),
-      body: FutureBuilder<void>(
-          future: cameraController.initialize(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return CameraPreview(cameraController);
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => bloc.capturePicture(context),
-        child: const Icon(Icons.camera_alt),
-      ),
-    );
-  }
-}
-
-class PictureCaptureBloc {
-  final CameraController cameraController;
-
-  PictureCaptureBloc(this.cameraController);
-
-  Future<void> dispose() async {
-    await cameraController.dispose();
-  }
-
-  Future<void> capturePicture(BuildContext context) async {
+  Stream<TakePictureState> mapEventToState(void event) async* {
     try {
-      await cameraController.initialize();
-      final XFile image = await cameraController.takePicture();
-      if (image != null) {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => DisplayPictureScreen(imagePath: image.path),
-          ),
-        );
-      }
+      yield const TakePictureInProgress();
+      await _controller.initialize();
+      final image = await _controller.takePicture();
+      yield TakePictureSuccess(image.path);
     } catch (e) {
-      print(e);
+      yield TakePictureFailure(e.toString());
     }
   }
 }
 
-class DisplayPictureScreen extends StatelessWidget {
+abstract class TakePictureState {
+  const TakePictureState();
+}
+
+class TakePictureInitial extends TakePictureState {
+  const TakePictureInitial();
+}
+
+class TakePictureInProgress extends TakePictureState {
+  const TakePictureInProgress();
+}
+
+class TakePictureSuccess extends TakePictureState {
   final String imagePath;
-  const DisplayPictureScreen({Key? key, required this.imagePath})
-      : super(key: key);
+
+  const TakePictureSuccess(this.imagePath);
+}
+
+class TakePictureFailure extends TakePictureState {
+  final String error;
+
+  const TakePictureFailure(this.error);
+}
+
+class TakePictureScreen extends StatefulWidget {
+  final CameraDescription camera;
+
+  const TakePictureScreen(
+    firstCamera, {
+    required Key key,
+    required this.camera,
+  }) : super(key: key);
+
+  @override
+  _TakePictureScreenState createState() => _TakePictureScreenState();
+}
+
+class _TakePictureScreenState extends State<TakePictureScreen> {
+  late CameraController _controller;
+  late Future<void> _initializeControllerFuture;
+  late TakePictureBloc _bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = CameraController(
+      widget.camera,
+      ResolutionPreset.medium,
+    );
+    _initializeControllerFuture = _initializeController();
+    _bloc = TakePictureBloc(_controller);
+  }
+
+  Future<void> _initializeController() async {
+    await _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _bloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Display the picture'),
+        title: const Text('Take a picture'),
       ),
-      body: Image.file(File(imagePath)),
+      body: BlocBuilder<TakePictureBloc, TakePictureState>(
+        bloc: _bloc,
+        builder: (context, state) {
+          if (state is TakePictureInProgress) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is TakePictureSuccess) {
+            return CameraPreview(_controller);
+          } else {
+            return const SizedBox();
+          }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _bloc.add(null),
+        child: const Icon(Icons.camera_alt),
+      ),
     );
   }
 }

@@ -117,6 +117,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome>
         setState(() {});
       }
       if (cameraController.value.hasError) {
+        // ignore: avoid_print
         print('Camera Error ${cameraController.value.errorDescription}');
       }
     });
