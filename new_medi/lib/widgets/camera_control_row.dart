@@ -9,7 +9,8 @@ Widget captureControlRowWidget(
   return IconButton(
     icon: const Icon(Icons.camera_alt),
     color: Colors.blue,
-    onPressed:
-        controller != null && controller.value.isInitialized ? onTakePictureButtonPressed : null,
+    onPressed: controller != null && controller.value.isInitialized
+        ? onTakePictureButtonPressed
+        : null,
   );
 }
