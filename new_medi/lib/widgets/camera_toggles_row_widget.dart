@@ -1,7 +1,5 @@
-// ignore_for_file: avoid_print
-
 import 'package:camera/camera.dart';
-import 'package:new_medi/widgets/camera_lens_icon.dart';
+import 'camera_lens_icon.dart';
 import 'package:flutter/material.dart';
 
 Widget cameraTogglesRowWidget(

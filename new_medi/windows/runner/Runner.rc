@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "new_medi" "\0"
+            VALUE "FileDescription", "medi_care_appliaction" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "new_medi" "\0"
+            VALUE "InternalName", "medi_care_appliaction" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "new_medi.exe" "\0"
-            VALUE "ProductName", "new_medi" "\0"
+            VALUE "OriginalFilename", "medi_care_appliaction.exe" "\0"
+            VALUE "ProductName", "medi_care_appliaction" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

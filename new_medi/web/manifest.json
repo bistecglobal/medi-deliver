@@ -1,6 +1,6 @@
 {
-    "name": "new_medi",
-    "short_name": "new_medi",
+    "name": "medi_care_appliaction",
+    "short_name": "medi_care_appliaction",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

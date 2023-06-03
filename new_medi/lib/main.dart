@@ -1,16 +1,19 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
+import 'package:medi_care_appliaction/details.dart';
+import 'package:medi_care_appliaction/takePicture.dart';
 import 'dart:async';
-import 'package:new_medi/takePicture.dart';
-import 'login.dart';
-import 'questions.dart';
-import 'trakOrder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:medi_care_appliaction/trackOrder.dart';
+import 'package:medi_care_appliaction/userLogin.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
   final firstCamera = cameras.first;
-  runApp(MyWidget(cameras: firstCamera));
+
+  runApp(ProviderScope(child: MyWidget(cameras: firstCamera)));
 }
 
 class MyWidget extends StatefulWidget {
@@ -34,30 +37,21 @@ class _MyWidgetState extends State<MyWidget> {
         onGenerateRoute: (settings) {
           if (settings.name == '/') {
             return MaterialPageRoute(
-                builder: (_) => const MyLoginPage(
-                      title: 'chathura',
+                builder: (_) => const LoginPage(
+                      title: 'Denidu',
                     ));
-          }
-          //  else if (settings.name == '/dashboard') {
-          //   return MaterialPageRoute(
-          //       builder: (_) =>  DashBoard(
-          //             value:_userIdController.text,
-          //           ));
-          // }
-          // else if (settings.name == '/upload') {
-          //   return MaterialPageRoute(builder: (_) => const Upload());
-          // }
-          else if (settings.name == '/questions') {
+          } else if (settings.name == '/questions') {
             return MaterialPageRoute(builder: (_) => const Questions());
             // } else if (settings.name == '/booking') {
             //   return MaterialPageRoute(builder: (_) => const Booking());
           } else if (settings.name == '/trakOrder') {
-            return MaterialPageRoute(builder: (_) => const TrakOrder());
+            return MaterialPageRoute(builder: (_) => const TrackOrderPage());
           } else if (settings.name == '/cam') {
             return MaterialPageRoute(
                 builder: (_) => TakePictureScreen(
                       cameras.firstCamera,
                       camera: cameras,
+                      key: UniqueKey(),
                     ));
           } else {
             return null;
